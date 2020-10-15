@@ -1,3 +1,29 @@
+# git-ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+# Created by https://www.gitignore.io/api/python,backup,visualstudiocode
+# Edit at https://www.gitignore.io/?templates=python,backup,visualstudiocode
+
+### Backup ###
+*.bak
+*.gho
+*.ori
+*.orig
+*.tmp
+
+#ignore thumbnails created by windows
+Thumbs.db
+
+# >> Doxygen
+output/
+html/
+latex/
+man/
+rtf/
+### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -102,7 +128,10 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+# dotenv
 .env
+
+# virtualenv
 .venv
 env/
 venv/
@@ -117,6 +146,11 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
 # mkdocs documentation
 /site
 
@@ -127,3 +161,20 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+
+#misc.
+/dat/im/
+zxprt/
+
+zenvar*.py

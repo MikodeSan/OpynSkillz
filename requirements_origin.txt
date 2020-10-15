@@ -1,0 +1,66 @@
+# --- Framework ---
+# pyqt5
+
+
+## -- Web --
+# Flask
+# flask_sqlalchemy
+django
+django-debug-toolbar
+django-extensions
+dj-database-url
+
+### - Config -
+configparser
+
+### - Static file -
+whitenoise
+
+
+# --- Server ---
+gunicorn
+
+
+# --- Database ---
+psycopg2
+mysql-connector-python		# do not use mysql-connector
+
+
+# --- TOOLS ---
+requests
+pillow
+# pygraphviz
+pyparsing
+pydot
+pydotplus
+pyOpenSSL
+
+
+# --- External libs ---
+google-api-python-client
+google-auth-oauthlib
+google-auth-httplib2
+
+
+# --- Test ---
+pycodestyle
+pylint
+
+pytest
+pytest-cov
+pytest-django
+pytest-xdist        # plugin: running tests in parallel
+coverage
+
+WebTest
+
+selenium
+
+
+
+# --- Monitoring ---
+sentry-sdk
+
+
+# --- Automation ---
+django-crontab
