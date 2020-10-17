@@ -62,7 +62,32 @@ DEVELOPER_KEY = GGL_KEY
 YOUTUBE_API_SERVICE_NAME = 'youtube'
 YOUTUBE_API_VERSION = 'v3'
 
-def search(query, is_channel=True, is_video=True, is_playlist=True, n_result_max=23):
+DEFAULT_N_RESULT_MAX = 23
+
+def get_video(video_id='', channel_id='', n_max=DEFAULT_N_RESULT_MAX):
+
+    video_lst = []
+
+    # https://www.googleapis.com/youtube/v3/search?key={your_key_here}&channelId={channel_id_here}&part=snippet,id&order=date&maxResults=20
+
+
+    return video_lst
+
+
+def get_playlist(playlist_id='', channel_id='', n_max=DEFAULT_N_RESULT_MAX):
+
+    playlist_lst = []
+
+    return playlist_lst
+
+
+def get_channel(channel_id='', channel_name='', n_max=DEFAULT_N_RESULT_MAX):
+
+    channel_dct = []
+
+    return channel_dct
+
+def search(query, is_channel=True, is_video=True, is_playlist=True, channel_id='', n_max=DEFAULT_N_RESULT_MAX):
 
     youtube = build(
         YOUTUBE_API_SERVICE_NAME,
@@ -87,23 +112,29 @@ def search(query, is_channel=True, is_video=True, is_playlist=True, n_result_max
     type_s = ','.join(type_lst)
     print(type_s)
     
+    params_dct = {
+        'q':query, 
+        'part':'id,snippet', 
+        'type':type_s, 
+        'maxResults':n_max,
+        }
+    if is_video and channel_id :
+        params_dct['channelId'] = channel_id
+    
     response_dct = youtube.search().list(
-        q=query,
-        part='id,snippet',
-        type=type_s,
-        maxResults=n_result_max,
+        **params_dct,
     ).execute()
 
     videos = []
     channels = []
     playlists = []
 
-    # print(json.dumps(
-    #         response_dct,
-    #         # sort_keys=True,
-    #         indent=4,
-    #         )
-    # )
+    print(json.dumps(
+            response_dct,
+            # sort_keys=True,
+            indent=4,
+            )
+    )
 
     # Add each result to the appropriate list, and then display the lists of
     # matching videos, channels, and playlists.
@@ -143,6 +174,7 @@ def search(query, is_channel=True, is_video=True, is_playlist=True, n_result_max
     # ).execute()
     # print('Channels:\n', '\n'.join(youtube), '\n')
 
+    
 
 # if __name__ == '__main__':
 #     parser = argparse.ArgumentParser()
@@ -158,7 +190,33 @@ def search(query, is_channel=True, is_video=True, is_playlist=True, n_result_max
 
 if __name__ == '__main__':
 
-    search("apprendre la photo", is_video=False)
-    search("marketing mania", is_playlist=False)
-    search("my new life", is_video=False, is_playlist=False)
-    # main()
+    youtube = build(
+        YOUTUBE_API_SERVICE_NAME,
+        YOUTUBE_API_VERSION,
+        developerKey=DEVELOPER_KEY,
+        )
+
+    # search("apprendre la photo", is_video=False)
+    channel_dct = youtube.channels().list(
+        part='snippet,contentDetails,statistics,topicDetails,status,brandingSettings,contentOwnerDetails,localizations',
+        id='UCuX05oOKyjib6CONyOpj5cw',
+    ).execute()
+    print(json.dumps(channel_dct,indent=4))             # sort_keys=True,
+    search("apprendre la photo", is_channel=False, is_video=True, is_playlist=False, channel_id='UCuX05oOKyjib6CONyOpj5cw', n_max=720)
+
+    # search("marketing mania", is_playlist=False)
+    channel_dct = youtube.channels().list(
+        part='snippet,contentDetails,statistics,topicDetails,status,brandingSettings,contentOwnerDetails,localizations',        # auditDetails
+        id='UCSmUdD2Dd_v5uqBuRwtEZug',
+    ).execute()
+    print(json.dumps(channel_dct,indent=4))             # sort_keys=True,
+    search("apprendre la photo", is_channel=False, is_video=True, is_playlist=False, channel_id='UCSmUdD2Dd_v5uqBuRwtEZug', n_max=720)
+
+    # search("my new life", is_video=False, is_playlist=False)
+    channel_dct = youtube.channels().list(
+        part='snippet,contentDetails,statistics,topicDetails,status,brandingSettings,contentOwnerDetails,localizations',
+        id='UCPMBFQQ5IDvxnW-vZfVWhLA',
+    ).execute()
+    print(json.dumps(channel_dct,indent=4))             # sort_keys=True,
+    search("apprendre la photo", is_channel=False, is_video=True, is_playlist=False, channel_id='UCPMBFQQ5IDvxnW-vZfVWhLA', n_max=720)
+
