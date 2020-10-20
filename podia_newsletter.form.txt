@@ -1,0 +1,5 @@
+<form action="https://miket.podia.com/email_lists/116391/subscriptions" accept-charset="UTF-8" method="post">
+<input type="email" name="email" required="required" placeholder="Email" />
+<input type="submit" value="Sign me up!" />
+</form>
+
