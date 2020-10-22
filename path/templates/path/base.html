@@ -23,6 +23,7 @@
     <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Scope+One" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Plugin CSS -->
     {% comment %} <link href="{% static 'product/vendor/magnific-popup/magnific-popup.css' %}" rel="stylesheet"> {% endcomment %}
@@ -30,6 +31,7 @@
     <!-- Theme CSS - Includes Bootstrap -->
     {% comment %} <link rel="stylesheet" href="{% static 'product/css/creative.min.css' %}"> {% endcomment %}
     {% comment %} <link rel="stylesheet" href="{% static 'product/css/zstyle.css' %}"> {% endcomment %}
+    <link href="{% static 'path/css/sb-admin-2.min.css' %}" rel="stylesheet"/>
     <link href="{% static 'path/css/styles.css' %}" rel="stylesheet"/>
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
     <link href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" rel="stylesheet" crossorigin="anonymous" />
@@ -508,6 +510,7 @@
 
       <div id="layoutSidenav_content">
         <main>
+        {% block header %}
           <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
               <div class="container">
                   <div class="page-header-content pt-4">
@@ -530,11 +533,13 @@
                   </div>
               </div>
           </header>
-
+        {% endblock %}
+          
           <!-- Main page content-->
+        {% block content %}
           <div class="container mt-n10">
-          {% block content %}{% endblock %}
           </div>
+        {% endblock %}
         </main>
 
         <!-- Footer -->
@@ -562,7 +567,6 @@
     <!-- Plugin JavaScript -->
     {% comment %} <script src="{% static 'product/vendor/jquery-easing/jquery.easing.min.js' %}"></script> {% endcomment %}
     {% comment %} <script src="{% static 'product/vendor/magnific-popup/jquery.magnific-popup.min.js' %}"></script> {% endcomment %}
-    <script src="{% static 'path/js/scripts.js' %}"></script>
 
     {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" crossorigin="anonymous"></script> {% endcomment %}
     {% comment %} <script src="assets/demo/chart-area-demo.js"></script> {% endcomment %}
@@ -573,6 +577,9 @@
 
     <!-- Custom scripts for this template -->
     {% comment %} <script src="{% static 'path/js/creative.min.js' %}"></script> {% endcomment %}
+
+    <script src="{% static 'path/js/sb-admin-2.min.js' %}"></script>
+    <script src="{% static 'path/js/scripts.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js" crossorigin="anonymous"></script>
     <script src="{% static 'path/assets/demo/date-range-picker-demo.js' %}"></script>
