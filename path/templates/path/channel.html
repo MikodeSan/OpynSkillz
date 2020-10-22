@@ -1,0 +1,356 @@
+{% extends 'path/base.html' %}
+
+{% load static %}
+
+
+{% block content %}
+
+  <div class="container">
+    <button class="btn btn-primary btn-lg .shadow-sm .px-4"><i class="fas fa-plus"></i> Nouveau</button>
+    <a class="btn btn-sm btn-primary p-3 line-height-normal" href="{% url 'path:path_new' %}">Nouveau</a>
+  
+    <a href="#" class="btn btn-success btn-icon-split">
+      <span class="icon text-white-50">
+        <i class="fas fa-plus"></i>
+      </span>
+      <span class="text">Nouveau</span>
+    </a>
+
+
+    <div class="card mb-4">
+      <div class="card-header">People</div>
+      <div class="card-body">
+          <!-- Item 1-->
+          <div class="d-flex align-items-center justify-content-between mb-4">
+            <div class="d-flex align-items-center flex-shrink-0 mr-3">
+                <div class="avatar avatar-xl mr-3 bg-gray-200"><img class="avatar-img img-fluid" src="{% static 'path/assets/img/freepik/profiles/profile-1.png' %}" alt="" /></div>
+                <div class="d-flex flex-column font-weight-bold">
+                    <a class="text-dark line-height-normal mb-1" href="#!">Sid Rooney</a>
+                    <div class="small text-muted line-height-normal">Position</div>
+                </div>
+            </div>
+            <div class="dropdown no-caret">
+                <button class="btn btn-transparent-dark btn-icon dropdown-toggle" id="dropdownPeople1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i data-feather="more-vertical"></i></button>
+                <div class="dropdown-menu dropdown-menu-right animated--fade-in-up" aria-labelledby="dropdownPeople1">
+                    <a class="dropdown-item" href="#!">Action</a>
+                    <a class="dropdown-item" href="#!">Another action</a>
+                    <a class="dropdown-item" href="#!">Something else here</a>
+                </div>
+            </div>
+          </div>
+          <!-- Item 2-->
+          <div class="d-flex align-items-center justify-content-between mb-4">
+              <div class="d-flex align-items-center flex-shrink-0 mr-3">
+                  <div class="avatar avatar-xl mr-3 bg-gray-200"><img class="avatar-img img-fluid" src="{% static 'path/assets/img/freepik/profiles/profile-2.png' %}" alt="" /></div>
+                  <div class="d-flex flex-column font-weight-bold">
+                      <a class="text-dark line-height-normal mb-1" href="#!">Keelan Garza</a>
+                      <div class="small text-muted line-height-normal">Position</div>
+                  </div>
+              </div>
+              <div class="dropdown no-caret">
+                  <button class="btn btn-transparent-dark btn-icon dropdown-toggle" id="dropdownPeople2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i data-feather="more-vertical"></i></button>
+                  <div class="dropdown-menu dropdown-menu-right animated--fade-in-up" aria-labelledby="dropdownPeople2">
+                      <a class="dropdown-item" href="#!">Action</a>
+                      <a class="dropdown-item" href="#!">Another action</a>
+                      <a class="dropdown-item" href="#!">Something else here</a>
+                  </div>
+              </div>
+          </div>
+          <!-- Item 3-->
+          <div class="d-flex align-items-center justify-content-between mb-4">
+              <div class="d-flex align-items-center flex-shrink-0 mr-3">
+                  <div class="avatar avatar-xl mr-3 bg-gray-200"><img class="avatar-img img-fluid" src="{% static 'path/assets/img/freepik/profiles/profile-3.png' %}" alt="" /></div>
+                  <div class="d-flex flex-column font-weight-bold">
+                      <a class="text-dark line-height-normal mb-1" href="#!">Kaia Smyth</a>
+                      <div class="small text-muted line-height-normal">Position</div>
+                  </div>
+              </div>
+              <div class="dropdown no-caret">
+                  <button class="btn btn-transparent-dark btn-icon dropdown-toggle" id="dropdownPeople3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i data-feather="more-vertical"></i></button>
+                  <div class="dropdown-menu dropdown-menu-right animated--fade-in-up" aria-labelledby="dropdownPeople3">
+                      <a class="dropdown-item" href="#!">Action</a>
+                      <a class="dropdown-item" href="#!">Another action</a>
+                      <a class="dropdown-item" href="#!">Something else here</a>
+                  </div>
+              </div>
+          </div>
+          <!-- Item 4-->
+          <div class="d-flex align-items-center justify-content-between mb-4">
+              <div class="d-flex align-items-center flex-shrink-0 mr-3">
+                  <div class="avatar avatar-xl mr-3 bg-gray-200"><img class="avatar-img img-fluid" src="{% static 'path/assets/img/freepik/profiles/profile-4.png' %}" alt="" /></div>
+                  <div class="d-flex flex-column font-weight-bold">
+                      <a class="text-dark line-height-normal mb-1" href="#!">Kerri Kearney</a>
+                      <div class="small text-muted line-height-normal">Position</div>
+                  </div>
+              </div>
+              <div class="dropdown no-caret">
+                  <button class="btn btn-transparent-dark btn-icon dropdown-toggle" id="dropdownPeople4" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i data-feather="more-vertical"></i></button>
+                  <div class="dropdown-menu dropdown-menu-right animated--fade-in-up" aria-labelledby="dropdownPeople4">
+                      <a class="dropdown-item" href="#!">Action</a>
+                      <a class="dropdown-item" href="#!">Another action</a>
+                      <a class="dropdown-item" href="#!">Something else here</a>
+                  </div>
+              </div>
+          </div>
+          <!-- Item 5-->
+          <div class="d-flex align-items-center justify-content-between mb-4">
+              <div class="d-flex align-items-center flex-shrink-0 mr-3">
+                  <div class="avatar avatar-xl mr-3 bg-gray-200"><img class="avatar-img img-fluid" src="{% static 'path/assets/img/freepik/profiles/profile-5.png' %}" alt="" /></div>
+                  <div class="d-flex flex-column font-weight-bold">
+                      <a class="text-dark line-height-normal mb-1" href="#!">Georgina Findlay</a>
+                      <div class="small text-muted line-height-normal">Position</div>
+                  </div>
+              </div>
+              <div class="dropdown no-caret">
+                  <button class="btn btn-transparent-dark btn-icon dropdown-toggle" id="dropdownPeople5" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i data-feather="more-vertical"></i></button>
+                  <div class="dropdown-menu dropdown-menu-right animated--fade-in-up" aria-labelledby="dropdownPeople5">
+                      <a class="dropdown-item" href="#!">Action</a>
+                      <a class="dropdown-item" href="#!">Another action</a>
+                      <a class="dropdown-item" href="#!">Something else here</a>
+                  </div>
+              </div>
+          </div>
+          <!-- Item 6-->
+          <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center flex-shrink-0 mr-3">
+                  <div class="avatar avatar-xl mr-3 bg-gray-200"><img class="avatar-img img-fluid" src="{% static 'path/assets/img/freepik/profiles/profile-6.png' %}" alt="" /></div>
+                  <div class="d-flex flex-column font-weight-bold">
+                      <a class="text-dark line-height-normal mb-1" href="#!">Wilf Ingram</a>
+                      <div class="small text-muted line-height-normal">Position</div>
+                  </div>
+              </div>
+              <div class="dropdown no-caret">
+                  <button class="btn btn-transparent-dark btn-icon dropdown-toggle" id="dropdownPeople6" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i data-feather="more-vertical"></i></button>
+                  <div class="dropdown-menu dropdown-menu-right animated--fade-in-up" aria-labelledby="dropdownPeople6">
+                      <a class="dropdown-item" href="#!">Action</a>
+                      <a class="dropdown-item" href="#!">Another action</a>
+                      <a class="dropdown-item" href="#!">Something else here</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- Payment methods card-->
+    <div class="card card-header-actions mb-4">
+      <div class="card-header">
+          Payment Methods
+          <button class="btn btn-sm btn-primary" type="button">Add Payment Method</button>
+      </div>
+
+
+      <div class="card-body">
+
+      <div class="card card-header-actions mb-4">
+        <div class="card-header">
+            Payment Methods
+            <button class="btn btn-sm btn-primary" type="button">Add Payment Method</button>
+        </div>
+        <div class="card-body">
+
+          <div class="card card-header-actions mb-4">
+            <div class="card-header">
+                Payment Methods
+                <button class="btn btn-sm btn-primary" type="button">Add Payment Method</button>
+            </div>
+            <div class="card-body">
+
+              <div class="card card-header-actions mb-4">
+                <div class="card-header">
+                    Payment Methods
+                    <button class="btn btn-sm btn-primary" type="button">Add Payment Method</button>
+                </div>
+                <div class="card-body">
+                    <!-- Payment method 1-->
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <i class="fab fa-cc-visa fa-2x cc-color-visa"></i>
+                            <div class="ml-4">
+                                <div class="small">Visa ending in 1234</div>
+                                <div class="text-xs text-muted">Expires 04/2024</div>
+                            </div>
+                        </div>
+                        <div class="ml-4 small">
+                            <div class="badge badge-light mr-3">Default</div>
+                            <a href="#!">Edit</a>
+                        </div>
+                    </div>
+                    <hr />
+                    <!-- Payment method 2-->
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <i class="fab fa-cc-mastercard fa-2x cc-color-mastercard"></i>
+                            <div class="ml-4">
+                                <div class="small">Mastercard ending in 5678</div>
+                                <div class="text-xs text-muted">Expires 05/2022</div>
+                            </div>
+                        </div>
+                        <div class="ml-4 small">
+                            <a class="text-muted mr-3" href="#!">Make Default</a>
+                            <a href="#!">Edit</a>
+                        </div>
+                    </div>
+                </div>
+              </div>
+
+
+
+
+
+
+
+
+                <!-- Payment method 1-->
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <i class="fab fa-cc-visa fa-2x cc-color-visa"></i>
+                        <div class="ml-4">
+                            <div class="small">Visa ending in 1234</div>
+                            <div class="text-xs text-muted">Expires 04/2024</div>
+                        </div>
+                    </div>
+                    <div class="ml-4 small">
+                        <div class="badge badge-light mr-3">Default</div>
+                        <a href="#!">Edit</a>
+                    </div>
+                </div>
+                <hr />
+                <!-- Payment method 2-->
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <i class="fab fa-cc-mastercard fa-2x cc-color-mastercard"></i>
+                        <div class="ml-4">
+                            <div class="small">Mastercard ending in 5678</div>
+                            <div class="text-xs text-muted">Expires 05/2022</div>
+                        </div>
+                    </div>
+                    <div class="ml-4 small">
+                        <a class="text-muted mr-3" href="#!">Make Default</a>
+                        <a href="#!">Edit</a>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+
+
+
+            <!-- Payment method 1-->
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <i class="fab fa-cc-visa fa-2x cc-color-visa"></i>
+                    <div class="ml-4">
+                        <div class="small">Visa ending in 1234</div>
+                        <div class="text-xs text-muted">Expires 04/2024</div>
+                    </div>
+                </div>
+                <div class="ml-4 small">
+                    <div class="badge badge-light mr-3">Default</div>
+                    <a href="#!">Edit</a>
+                </div>
+            </div>
+            <hr />
+            <!-- Payment method 2-->
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <i class="fab fa-cc-mastercard fa-2x cc-color-mastercard"></i>
+                    <div class="ml-4">
+                        <div class="small">Mastercard ending in 5678</div>
+                        <div class="text-xs text-muted">Expires 05/2022</div>
+                    </div>
+                </div>
+                <div class="ml-4 small">
+                    <a class="text-muted mr-3" href="#!">Make Default</a>
+                    <a href="#!">Edit</a>
+                </div>
+            </div>
+        </div>
+      </div>
+
+
+          <!-- Payment method 1-->
+          <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                  <i class="fab fa-cc-visa fa-2x cc-color-visa"></i>
+                  <div class="ml-4">
+                      <div class="small">Visa ending in 1234</div>
+                      <div class="text-xs text-muted">Expires 04/2024</div>
+                  </div>
+              </div>
+              <div class="ml-4 small">
+                  <div class="badge badge-light mr-3">Default</div>
+                  <a href="#!">Edit</a>
+              </div>
+          </div>
+          <hr />
+          <!-- Payment method 2-->
+          <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                  <i class="fab fa-cc-mastercard fa-2x cc-color-mastercard"></i>
+                  <div class="ml-4">
+                      <div class="small">Mastercard ending in 5678</div>
+                      <div class="text-xs text-muted">Expires 05/2022</div>
+                  </div>
+              </div>
+              <div class="ml-4 small">
+                  <a class="text-muted mr-3" href="#!">Make Default</a>
+                  <a href="#!">Edit</a>
+              </div>
+          </div>
+          <hr />
+          <!-- Payment method 3-->
+          <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                  <i class="fab fa-cc-amex fa-2x cc-color-amex"></i>
+                  <div class="ml-4">
+                      <div class="small">American Express ending in 9012</div>
+                      <div class="text-xs text-muted">Expires 01/2026</div>
+                  </div>
+              </div>
+              <div class="ml-4 small">
+                  <a class="text-muted mr-3" href="#!">Make Default</a>
+                  <a href="#!">Edit</a>
+              </div>
+          </div>
+      </div>
+    </div>
+
+
+    <!-- Security preferences card-->
+    <div class="card mb-4">
+        <div class="card-header">Security Preferences</div>
+        <div class="card-body">
+            <!-- Account privacy optinos-->
+            <h5 class="mb-1">Account Privacy</h5>
+            <p class="small text-muted">By setting your account to private, your profile information and posts will not be visible to users outside of your user groups.</p>
+            <form>
+                <div class="custom-control custom-radio">
+                    <input class="custom-control-input" id="radioPublic" type="radio" name="radioPrivacy" checked />
+                    <label class="custom-control-label" for="radioPublic">Public (posts are available to all users)</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input class="custom-control-input" id="radioPrivate" type="radio" name="radioPrivacy" />
+                    <label class="custom-control-label" for="radioPrivate">Private (posts are available to only users in your groups)</label>
+                </div>
+            </form>
+            <hr class="my-4" />
+            <!-- Data sharing options-->
+            <h5 class="mb-1">Data Sharing</h5>
+            <p class="small text-muted">Sharing usage data can help us to improve our products and better serve our users as they navigation through our application. When you agree to share usage data with us, crash reports and usage analytics will be automatically sent to our development team for investigation.</p>
+            <form>
+                <div class="custom-control custom-radio">
+                    <input class="custom-control-input" id="radioUsageYes" type="radio" name="radioUsage" checked />
+                    <label class="custom-control-label" for="radioUsageYes">Yes, share data and crash reports with app developers</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input class="custom-control-input" id="radioUsageNo" type="radio" name="radioUsage" />
+                    <label class="custom-control-label" for="radioUsageNo">No, limit my data sharing with app developers</label>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+  </div>
+
+{% endblock %}
