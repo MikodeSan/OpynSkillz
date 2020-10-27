@@ -40,14 +40,11 @@ def create_path(request):
     context = {}
     context['Message'] = 'Hello Moto'
 
-    print('Path label:', request)
-
     if request.method == 'POST':
     
         label = request.POST.get('path_label')
         description = request.POST.get('description')
-        print('Path label: {}, Description: {}'.format(label, description))
-
+        
         path_dbo = ZPath.objects.create(label=label, description=description)
 
     return redirect('path:channel')
