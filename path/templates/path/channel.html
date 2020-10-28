@@ -66,33 +66,36 @@
       </div>
       <div class="card-body">
 
-      {% for path_dbo in path_dbo_lst %}
+        {% for path_dbo in path_dbo_lst %}
 
-        <div class="card card-header-actions mb-4">
-          <div class="card-header">
-              {{path_dbo.label}}
-              <button class="btn btn-sm btn-primary" type="button">Edit</button>
-          </div>
-          <div class="card-body">
+        <a id='path_{{path_dbo.pk}}' class="card card-header-actions lift lift-sm mb-4" href="#">
+          <div class="card card-header-actions mb-4">
+            <div class="card-header">
+                {{path_dbo.label}}
+                <button class="btn btn-sm btn-primary" type="button">Edit</button>
+            </div>
+            <div class="card-body py-4">
 
-            <!-- Payment method 1-->
-            <div class="d-flex align-items-center justify-content-between">
-              <div>
-              {% comment %} <div class="d-flex align-items-center"> {% endcomment %}
-                <!-- Account privacy optinos-->
-                <h5 class="mb-1">Account Privacy</h5>
-                <p class="small text-muted">{{path_dbo.description}}</p>
-                <hr class="my-4" />
-                <p class="small text-muted">blablabla</p>
-              </div>
-              <div class="ml-4 small">
-                <div class="badge badge-light mr-3">Default</div>
-                <a href="#!">Edit</a>
+              <!-- Payment method 1-->
+              <div class="d-flex align-items-center justify-content-between">
+                <div>
+                {% comment %} <div class="d-flex align-items-center"> {% endcomment %}
+                  <!-- Account privacy optinos-->
+                  <h5 class="mb-1">Account Privacy</h5>
+                  <p class="small text-muted">{{path_dbo.description}}</p>
+                  <hr class="my-4" />
+                  <p class="small text-muted">blablabla</p>
+                </div>
+                <div class="ml-4 small">
+                  <div class="badge badge-light mr-3">Default</div>
+                  <a href="#!">Edit</a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      {% endfor %}
+        </a>
+
+        {% endfor %}
       
       
           {% comment %} <!-- Payment method 1-->
