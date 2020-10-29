@@ -50,3 +50,11 @@ def create_path(request):
     return redirect('path:channel')
 
 
+def sandbox(request, path_id):
+
+    context = {}
+    context['Message'] = 'Hello Moto'
+
+    print('Path ID', path_id)
+
+    return render(request, 'path/sandbox.html', context)
