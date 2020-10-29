@@ -2,7 +2,6 @@
 
 {% load static %}
 
-
 {% block content %}
 
   <div class="container">
@@ -59,6 +58,32 @@
     </div> {% endcomment %}
 
     <!-- Payment methods card-->
+     <!-- Knowledge base main category card 1-->
+    <a class="card card-icon lift lift-sm mb-4" href="knowledge-base-category.html">
+        <div class="row no-gutters">
+            <div class="col-auto card-icon-aside bg-primary"><i class="text-white-50" data-feather="compass"></i></div>
+            <div class="col">
+                <div class="card-body py-4">
+                    <h5 class="card-title text-primary mb-2">Getting Started</h5>
+                    <p class="card-text mb-1">Basic information about getting started including installation instructions, setup, and basic usage.</p>
+                    <div class="small text-muted">5 articles in this category</div>
+                </div>
+            </div>
+        </div>
+    </a>
+    <div class="card card-icon lift lift-sm mb-4">
+        <div class="row no-gutters">
+            <div class="col-auto card-icon-aside bg-primary"><i class="mr-1 text-white-50" data-feather="layers"></i></div>
+            <div class="col">
+                <div class="card-body py-5">
+                    <h5 class="card-title">Custom Icon Card</h5>
+                    <p class="card-text">The icon card is an extension of the Bootstrap card component that uses Bootstrap layout classes in unison with custom styling to create a new card layout that you can use to add emphasis to certain content.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="card card-header-actions mb-4">
       <div class="card-header">
           Liste des parcours
@@ -66,33 +91,36 @@
       </div>
       <div class="card-body">
 
-      {% for path_dbo in path_dbo_lst %}
+        {% for path_dbo in path_dbo_lst %}
 
-        <div class="card card-header-actions mb-4">
-          <div class="card-header">
-              {{path_dbo.label}}
-              <button class="btn btn-sm btn-primary" type="button">Edit</button>
-          </div>
-          <div class="card-body">
+        {% comment %} <a id='path_{{path_dbo.pk}}' class="lift lift-sm mb-4" href="#"> {% endcomment %}
+          <div class="card card-header-actions mb-4">
+            <div class="card-header">
+                {{path_dbo.label}}
+                <button class="btn btn-sm btn-primary" type="button">Edit</button>
+                <a id='path_{{path_dbo.pk}}' class="btn btn-sm btn-primary p-3 line-height-normal" href="{% url 'path:sandbox' path_dbo.pk %}"><i class="fas fa-cloud-download-alt"></i> Abonnements</a>
+            </div>
+            <div class="card-body py-4">
 
-            <!-- Payment method 1-->
-            <div class="d-flex align-items-center justify-content-between">
-              <div>
-              {% comment %} <div class="d-flex align-items-center"> {% endcomment %}
-                <!-- Account privacy optinos-->
-                <h5 class="mb-1">Account Privacy</h5>
-                <p class="small text-muted">{{path_dbo.description}}</p>
-                <hr class="my-4" />
-                <p class="small text-muted">blablabla</p>
-              </div>
-              <div class="ml-4 small">
-                <div class="badge badge-light mr-3">Default</div>
-                <a href="#!">Edit</a>
+              <!-- Payment method 1-->
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                  <!-- Account privacy optinos-->
+                  <h5 class="mb-1">Account Privacy</h5>
+                  <p class="small text-muted">{{path_dbo.description}}</p>
+                  <hr class="my-4" />
+                  <p class="small text-muted">blablabla</p>
+                </div>
+                <div class="ml-4 small">
+                  <div class="badge badge-light mr-3">Default</div>
+                  <a href="#!">Edit</a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      {% endfor %}
+        {% comment %} </a> {% endcomment %}
+
+        {% endfor %}
       
       
           {% comment %} <!-- Payment method 1-->
