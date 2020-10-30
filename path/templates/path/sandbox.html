@@ -20,11 +20,12 @@
                 </div>
                 <div class="page-header-search mt-4">
 
-                    <form action="{% url 'path:home' %}" method="post">
-                    {% csrf_token %}
+                    {% comment %} <form action="{% url 'path:home' %}" method="post" onsubmit="myFunction()> {% endcomment %}
+                    <form onsubmit="search_source()">
+                        {% csrf_token %}
 
                         <div class="input-group input-group-joined">
-                            <input class="form-control" type="text" placeholder="Recherche..." aria-label="Search" autofocus name="query" value=""/>
+                            <input id='sandbox_search_id' class="form-control" type="text" placeholder="Recherche..." aria-label="Search" autofocus name="query" value=""/>
                             <div class="input-group-append">
                                 <span class="input-group-text"><i data-feather="search"></i></span>
                             </div>
@@ -178,4 +179,13 @@
 
   </div>
 
+
+
+<script>
+    var parse_favorite_url = "{% url 'path:source_query' %}"
+</script>
+<script src="{% static 'path/js/zajax.js' %}"></script>
+<script src="{% static 'path/js/zpath.js' %}"></script>
+
 {% endblock %}
+

@@ -24,9 +24,6 @@ PROJECT_DIR = os.path.join(BASE_DIR, 'web_project')
 sys.path.append(BASE_DIR)
 sys.path.append(PROJECT_DIR)
 
-from settings.zenvar import GGL_KEY
-
-
 class ZYouTube:
     
     YOUTUBE_API_SERVICE_NAME = 'youtube'
@@ -58,7 +55,7 @@ class ZYouTube:
 
         while enable:
 
-            etag, response_dct = self._search("", is_channel=False, is_video=True, is_playlist=False, channel_id=channel_id, page_id=page_id, n_max=n)
+            etag, response_dct = self.search("", is_channel=False, is_video=True, is_playlist=False, channel_id=channel_id, page_id=page_id, n_max=n)
             page_info = response_dct['pageInfo']
 
             if is_first is True:
@@ -143,7 +140,7 @@ class ZYouTube:
         return etag, channel_dct
 
 
-    def _search(self, query, is_channel=True, is_video=True, is_playlist=True, channel_id='', page_id='', n_max=0):
+    def search(self, query, is_channel=True, is_video=True, is_playlist=True, channel_id='', page_id='', n_max=0):
         """
         Call the search.list method to retrieve results matching the specified query term.
         """
@@ -184,10 +181,15 @@ class ZYouTube:
 
         etag = ''
         response_dct = youtube.search().list(**params_dct).execute()
+        
+        next_page_token = ''
+        if 'nextPageToken' in response_dct:
+            next_page_token = response_dct['nextPageToken']
+            
 
-        videos = []
-        channels = []
-        playlists = []
+        video_lst = []
+        channel_lst = []
+        playlist_lst = []
 
         # print(json.dumps(
         #         response_dct,
@@ -202,21 +204,40 @@ class ZYouTube:
 
             result = search_result['id']['kind']
             snippet_dct = search_result['snippet']
+
             if result == 'youtube#video':
-                videos.append('%s (%s)' % (search_result['snippet']['title'],
-                                        search_result['id']['videoId']))
+                video_dct = {}
+                video_dct['id'] = search_result['id']['videoId']
+                video_dct['channel_id'] = snippet_dct['channelId']
+                video_dct['channel_title'] = snippet_dct['channelTitle']
+                video_dct['published_t'] = snippet_dct['publishedAt']
+                video_dct['title'] = snippet_dct['title']
+                video_dct['description'] = snippet_dct['description']
+                video_dct['thumbnail_url'] = snippet_dct['thumbnails']['high']['url']
+
+                video_lst.append(video_dct)
             
             elif result == 'youtube#channel':
-                channels.append('{} ({}) {} {}'.format(snippet_dct['title'],
-                                                    snippet_dct['channelId'],
-                                                    snippet_dct['publishedAt'],
-                                                    snippet_dct['description'],
-                                                )
-                )
+                channel_dct = {}
+                channel_dct['id'] = search_result['id']['channelId']
+                channel_dct['published_t'] = snippet_dct['publishedAt']
+                channel_dct['title'] = snippet_dct['title']
+                channel_dct['description'] = snippet_dct['description']
+                channel_dct['thumbnail_url'] = snippet_dct['thumbnails']['high']['url']
+
+                channel_lst.append(channel_dct)
 
             elif result == 'youtube#playlist':
-                playlists.append('%s (%s)' % (search_result['snippet']['title'],
-                                            search_result['id']['playlistId']))
+                playlist_dct = {}
+                playlist_dct['id'] = search_result['id']['playlistId']
+                playlist_dct['channel_id'] = snippet_dct['channelId']
+                playlist_dct['channel_title'] = snippet_dct['channelTitle']
+                playlist_dct['published_t'] = snippet_dct['publishedAt']
+                playlist_dct['title'] = snippet_dct['title']
+                playlist_dct['description'] = snippet_dct['description']
+                playlist_dct['thumbnail_url'] = snippet_dct['thumbnails']['high']['url']
+
+                playlist_lst.append(playlist_dct)
 
         # print('Videos:\n   -', '\n   -'.join(videos), '\n') 
         # print('Channels:\n', '\n'.join(channels), '\n')
@@ -266,7 +287,14 @@ class ZYouTube:
     #             }
     #         },
 
-        return etag, response_dct
+        resp_dct = {}
+        resp_dct['next_page_token'] = next_page_token
+        resp_dct['channel_lst'] = channel_lst
+        resp_dct['video_lst'] = video_lst
+        resp_dct['playlist_lst'] = playlist_lst
+
+        return resp_dct
+
 
     def __build(self):
 
@@ -320,11 +348,12 @@ class ZYouTube:
 
 if __name__ == '__main__':
 
+    from settings.zenvar import GGL_KEY
 
     ytb_obj = ZYouTube(GGL_KEY)
 
     # etag, response_dct = ytb_obj._search("apprendre la photo", is_video=False)
-    etag, response_dct = ytb_obj._search("thomas hammoudi", is_video=False)
+    etag, response_dct = ytb_obj.search("thomas hammoudi", is_video=False)
     # etag, channel_dct = ytb_obj.get_channel(channel_id='UCuX05oOKyjib6CONyOpj5cw')
     print(json.dumps(response_dct,indent=4))             # sort_keys=True,
 
