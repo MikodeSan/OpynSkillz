@@ -72,7 +72,18 @@ def create_path(request):
 def sandbox(request, path_id):
 
     context = {}
-    context['Message'] = 'Hello Moto'
+    context['path_id'] = path_id
+
+    if request.method == 'GET':
+        
+        if 'query' in request.GET:
+            query = request.GET['query']
+
+            ytb_obj = ytb.ZYouTube(settings.GGL_KEY)
+            search_dct = ytb_obj.search(query, is_playlist=False, is_video=False)
+
+            print(json.dumps( search_dct, indent=4 ))
+            context['search_dct'] = search_dct
 
     return render(request, 'path/sandbox.html', context)
 
@@ -90,24 +101,6 @@ def parse_source_query(request):
         resp_dct = ytb_obj.search(query)
 
         print(json.dumps( resp_dct, indent=4 ))
-
-    #     # Update or create favorite product into db
-    #     user_mdl = get_user_model().objects.get(username=request.user.username)
-    #     print(request.user)
-    #     print(user_mdl)
-    #     try:
-    #         favorite_mdl = ZProduct.objects.get(code=int(code))
-    #     except ZProduct.DoesNotExist:
-    #         print("CRITICAL ERROR GETINNG FAVORITE PRODUCT")
-    #     else:
-    #         if favorite:
-    #             user_mdl.favorites.add(favorite_mdl)
-    #         else:
-    #             user_mdl.favorites.remove(favorite_mdl)
-    #         favorite = not favorite
-    #         print(favorite)
-
-    #     print(user_mdl.favorites.all())
         context = {'resp' : resp_dct}
 
     return HttpResponse( json.dumps( context ) )

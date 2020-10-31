@@ -10,7 +10,7 @@ function search_source() {
     data.append('query', query_in.value);
     // data.append('favorite', flag);
 
-    zajaxPost(parse_favorite_url, data, search_source_assert, ack, false);
+    zajaxPost(parse_source_query_url, data, search_source_assert, ack, false);
 }
 
 
