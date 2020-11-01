@@ -1,0 +1,72 @@
+{% extends 'path/base.html' %}
+
+{% load static %}
+
+
+{% block content %}
+
+  <!-- Main page content-->
+  <div class="container mt-n10">
+    <div class="row">
+      <div class="col-lg-9">
+        <!-- Form Controls-->
+        <div id="default">
+          <div class="card mb-4">
+            <div class="card-header">Nouveau parcours</div>
+            <form action="{% url 'path:path_create' %}" method="post">
+            {% comment %} <form class="form-inline justify-content-center" action="{% url 'path:home' %}" method="post"> {% endcomment %}
+              {% csrf_token %}
+              <div class="card-body">
+                <!-- Component Preview-->
+                <div class="sbp-preview">
+                  <div class="sbp-preview-content">
+
+                    {% comment %} <form> {% endcomment %}
+                      <div class="form-group">
+                          {% comment %} <label for="exampleFormControlInput1">Email address</label>
+                          <input class="form-control" id="exampleFormControlInput1" type="email" placeholder="name@example.com" /> {% endcomment %}
+                          <label for="path_label">Nom</label>
+                          <input type="text" class='form-control' id='path_label' name="path_label" value="">
+                      </div>
+                      {% comment %} <div class="form-group">
+                          <label for="exampleFormControlSelect1">Example select</label>
+                          <select class="form-control" id="exampleFormControlSelect1">
+                              <option>1</option>
+                              <option>2</option>
+                              <option>3</option>
+                              <option>4</option>
+                              <option>5</option>
+                          </select>
+                      </div> {% endcomment %}
+                      {% comment %} <div class="form-group">
+                          <label for="exampleFormControlSelect2">Example multiple select</label>
+                          <select class="form-control" id="exampleFormControlSelect2" multiple="">
+                              <option>1</option>
+                              <option>2</option>
+                              <option>3</option>
+                              <option>4</option>
+                              <option>5</option>
+                          </select>
+                      </div> {% endcomment %}
+                      <div class="form-group">
+                        <label for='description'>Description</label>
+                        <textarea class='form-control' id='description' name='description' rows="3"></textarea>
+                      </div>
+                    {% comment %} </form> {% endcomment %}
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <a class="btn btn-sm btn-secondary p-3 line-height-normal" href="{% url 'path:channel' %}">Annuler</a>
+                <button type="submit" class="btn btn-success">Valider</button>
+              </div>
+            {% comment %} <div class="sbp-preview-text">The default Bootstrap form control states have been restyled to fit the SB Admin Pro theme. The style has changed, but the markup is identical.</div> {% endcomment %}
+            </form>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

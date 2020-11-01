@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+from .zenvar import *
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -36,7 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'path.apps.PathConfig',
     'django.contrib.staticfiles',
+    'django_extensions',
+    'django_crontab',
+    'debug_toolbar',    
 ]
 
 MIDDLEWARE = [
@@ -47,6 +52,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'web_project.urls'
@@ -99,13 +106,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGIN_URL = 'account/sign-in/'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fr-FR'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Paris'      # 'UTC'
 
 USE_I18N = True
 
@@ -118,3 +127,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# STATIC_ROOT = os.path.join(PROJECT_DIR, 'staticfiles')
+
+
+# CRONJOBS = [
+#     ('* * * * *', 'product.cron.my_scheduled_job', '>> /tmp/djg_cron_test_dbg.log'),
+#     # ('* * * * *', 'django.core.management.call_command', ['initializedatabase'], '>> /tmp/djg_cron_opnfct_initdata_dbg.log'),   
+#     # ('* * * * *', 'django.core.management.call_command', ['initializedatabase', 0], '>> /tmp/djg_cron_opnfct_initdata_dbg.log'),
+#     # ('* * * * *', 'product.management.commands.initializedatabase.Command.handle', [0], '>> /tmp/djg_cron_opnfct_initdata_dbg.log'),
+#     ('* * * * *', 'product.management.call_command', ['initializedatabase', 0], '>> /tmp/djg_cron_opnfct_initdata_dbg.log'),
+#     # ('* * * * *', 'django.core.management.call_command', ['dumpdata', 'auth'], {'indent': 4}, '>> /tmp/djg_cron_opnfct_auth_backup_dbg.json'),
+# ]

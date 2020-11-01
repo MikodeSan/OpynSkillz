@@ -25,6 +25,8 @@ gunicorn
 psycopg2
 mysql-connector-python		# do not use mysql-connector
 
+django-mptt
+
 
 # --- TOOLS ---
 requests
