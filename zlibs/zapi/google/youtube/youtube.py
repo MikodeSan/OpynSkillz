@@ -132,7 +132,8 @@ class ZYouTube:
             response_dct = youtube.channels().list(**params_dct).execute()
             print(json.dumps(response_dct,indent=4))             # sort_keys=True,
 
-            if response_dct['pageInfo']['resultsPerPage']:
+            if response_dct['pageInfo']['resultsPerPage'] > 0:
+                # channel found
 
                 etag = response_dct['etag']
                 channel_dct = response_dct['items'][0]
@@ -191,12 +192,12 @@ class ZYouTube:
         channel_lst = []
         playlist_lst = []
 
-        # print(json.dumps(
-        #         response_dct,
-        #         # sort_keys=True,
-        #         indent=4,
-        #         )
-        # )
+        print(json.dumps(
+                response_dct,
+                # sort_keys=True,
+                indent=4,
+                )
+        )
 
         # Add each result to the appropriate list, and then display the lists of
         # matching videos, channels, and playlists.

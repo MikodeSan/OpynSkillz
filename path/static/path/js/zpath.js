@@ -44,3 +44,48 @@ const ack = () => {
     // console.log('Favorite setting Ack !');
     // console.log('function name:' + arguments.callee.name);
 };
+
+
+function subscribe(element, path_id, channel_id) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    let img = element.children;
+    im_type = img[0].getAttribute('data-prefix');
+
+    let data = new FormData();
+    if (im_type == 'far') {
+        data.append('enable', true);
+    } else {
+        data.append('enable', false);
+    }
+    data.append('path_id', path_id);
+    data.append('channel_id', channel_id);
+
+    zajaxPost(parse_channel_subcription_url, data, subscribe_assert, ack, false);
+}
+
+
+/* Assert favorite setting */
+async function subscribe_assert(reply_json) {
+
+    let data = JSON.parse(reply_json);
+
+    if ('path_id' in data) {
+
+        /* Toggle image state */
+        let element = document.getElementById("subs_" + data.ytb_channel_id);
+        let img = element.children;
+
+        // img[0].classList.toggle("fa-thumbs-down");
+        // img[0].classList.toggle("fa-thumbs-up");
+
+        im_type = img[0].getAttribute('data-prefix');
+        if (im_type == 'far') {
+            img[0].setAttribute('data-prefix', 'fas');
+        } else {
+            img[0].setAttribute('data-prefix', 'far');
+        }
+    }
+}

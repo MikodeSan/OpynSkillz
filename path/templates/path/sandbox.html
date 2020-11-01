@@ -22,10 +22,10 @@
 
                     <form action="{% url 'path:sandbox' path_id %}" method="get">
                         {% comment %} <form onsubmit="search_source()"> {% endcomment %}
-                        {% comment %} {% csrf_token %} {% endcomment %}
+                        {% csrf_token %}
 
                         <div class="input-group input-group-joined">
-                            <input id='sandbox_search_id' class="form-control" type="text" placeholder="Recherche..." aria-label="Search" autofocus name="query" value=""/>
+                            <input id='sandbox_search_id' class="form-control" type="text" placeholder="Recherche..." aria-label="Search" autofocus name="query" value="{{query}}"/>
                             <div class="input-group-append">
                                 <span class="input-group-text"><i data-feather="search"></i></span>
                             </div>
@@ -45,61 +45,79 @@
     
         {% if search_dct %}
 
-            <h4 class="mb-0 mt-5">Chaînes</h4>
+            <h4 class="mb-0 mt-5">Nouvelles sources</h4>
             <hr class="mt-2 mb-4" />
 
             {% for channel_dct in search_dct.channel_lst %}        
-            {% comment %} video_lst   playlist_lst {% endcomment %}
+                {% comment %} video_lst   playlist_lst {% endcomment %}
+
+                <!-- Knowledge base main category card 1-->
+                <div class="card card-icon lift lift-sm mb-4">
+                    <div class="row no-gutters">
+                        {% comment %} <div class="col-auto card-icon-aside bg-primary"><i class="text-white-50" data-feather="compass"></i></div> {% endcomment %}
+                        <div class="col-auto card-icon-aside bg-primary"><img src="{{channel_dct.thumbnail_url}}" alt="{{channel_dct.title}}" style="width:96px;height:96px;"></div>
+                        <div class="col">
+                            <div class="card-body py-4">
+
+                                <div>
+                                    <button id="subs_{{channel_dct.id}}" class="btn btn-pink btn-icon mr-2" onclick="subscribe(this, {{path_id}}, '{{channel_dct.id}}')" >
+                                        <i class="far fa-bookmark"></i>
+                                    </button>
+                                    <button class="btn btn-teal btn-icon mr-2">
+                                        <i data-feather="bookmark"></i>
+                                    </button>
+                                    <button class="btn btn-blue btn-icon">
+                                        <i data-feather="share"></i>
+                                    </button>
+                                </div>
+                                
+                                <h5 class="card-title text-primary mb-2">{{channel_dct.title}}</h5>
+                                <p class="card-text mb-1">{{channel_dct.description}}</p>
+                                <div class="small text-muted"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            
+        {% endif %}
+
+        <h4 class="mb-0 mt-5">Chaînes souscrites</h4>
+        <hr class="mt-2 mb-4" />
+
+        {% for source_dbo in source_dbo_lst %}        
 
             <!-- Knowledge base main category card 1-->
-            <a id={{channel_dct.id}} class="card card-icon lift lift-sm mb-4" href="knowledge-base-category.html">
+            <div class="card card-icon lift lift-sm mb-4">
                 <div class="row no-gutters">
                     {% comment %} <div class="col-auto card-icon-aside bg-primary"><i class="text-white-50" data-feather="compass"></i></div> {% endcomment %}
-                    <div class="col-auto card-icon-aside bg-primary"><img src="{{channel_dct.thumbnail_url}}" alt="Italian Trulli"></div>
+                    <div class="col-auto card-icon-aside bg-secondary"><img src="{{source_dbo.thumbnail_url}}" alt="{{source_dbo.label}}" style="width:96px;height:96px;"></div>
                     <div class="col">
                         <div class="card-body py-4">
-                            <h5 class="card-title text-primary mb-2">{{channel_dct.title}}</h5>
-                            <p class="card-text mb-1">{{channel_dct.description}}</p>
+
+                            <div>
+                                <button id="subs_{{source_dbo.identifier}}" class="btn btn-pink btn-icon mr-2" onclick="subscribe(this, {{path_id}}, '{{source_dbo.identifier}}')" >
+                                    <i class="fas fa-bookmark"></i>
+                                </button>
+                                <button class="btn btn-teal btn-icon mr-2">
+                                    <i data-feather="bookmark"></i>
+                                </button>
+                                <button class="btn btn-blue btn-icon">
+                                    <i data-feather="share"></i>
+                                </button>
+                            </div>
+                            
+                            <h5 class="card-title text-secondary mb-2">{{source_dbo.label}}</h5>
+                            <p class="card-text mb-1">{{source_dbo.description}}</p>
                             <div class="small text-muted"></div>
                         </div>
                     </div>
                 </div>
-            </a>
+            </div>
         {% endfor %}
-            
-        {% endif %}
-            
-        
 
 
-        <h4 class="mb-0 mt-5">Main Categories</h4>
-        <hr class="mt-2 mb-4" />
-        <!-- Knowledge base main category card 2-->
-        <a class="card card-icon lift lift-sm mb-4" href="knowledge-base-category.html">
-            <div class="row no-gutters">
-                <div class="col-auto card-icon-aside bg-secondary"><i class="text-white-50" data-feather="users"></i></div>
-                <div class="col">
-                    <div class="card-body py-4">
-                        <h5 class="card-title text-secondary mb-2">Account Information</h5>
-                        <p class="card-text mb-1">Troubleshooting guides specific to your account including creating new accounts, modifying existing accounts, and deleting accounts.</p>
-                        <div class="small text-muted">3 articles in this category</div>
-                    </div>
-                </div>
-            </div>
-        </a>
-        <!-- Knowledge base main category card 3-->
-        <a class="card card-icon lift lift-sm mb-4" href="knowledge-base-category.html">
-            <div class="row no-gutters">
-                <div class="col-auto card-icon-aside bg-teal"><i class="text-white-50" data-feather="book"></i></div>
-                <div class="col">
-                    <div class="card-body py-4">
-                        <h5 class="card-title text-teal mb-2">Terms of Service</h5>
-                        <p class="card-text mb-1">Our terms, licensing, and other legal documentation.</p>
-                        <div class="small text-muted">7 articles in this category</div>
-                    </div>
-                </div>
-            </div>
-        </a>
+
         <h4 class="mb-0 mt-5">Other Topics</h4>
         <hr class="mt-2 mb-4" />
         <div class="row">
@@ -194,7 +212,8 @@
 
 
 <script>
-    var parse_source_query_url = "{% url 'path:source_query' %}"
+    {% comment %} var parse_source_query_url = "{% url 'path:source_query' %}" {% endcomment %}
+    var parse_channel_subcription_url = "{% url 'path:channel_subscription' %}"
 </script>
 <script src="{% static 'path/js/zajax.js' %}"></script>
 <script src="{% static 'path/js/zpath.js' %}"></script>
