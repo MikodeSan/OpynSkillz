@@ -24,7 +24,7 @@ from django.conf import settings
 #     division_by_zero = 1 / 0
 
 urlpatterns = [
-    path('', include('path.urls')),
+    path('', include('path.urls', namespace='path')),
     path('opadskin/', admin.site.urls),
     # path('sentry-debug/', trigger_error),
 ]
