@@ -125,7 +125,7 @@ def sandbox(request, path_id):
 
         context['source_dbo_lst'] = source_dbo_lst 
 
-    return render(request, 'path/sandbox.html', context)
+    return render(request, 'path/sandbox/sandbox.html', context)
 
 
 def parse_source_query(request):
@@ -238,3 +238,61 @@ def add_youtube_channel_2_path(request):
 
 
     return HttpResponse( json.dumps( context ) )
+
+
+
+def sandbox_source_contents(request, path_id, source_id):
+    
+    context = {}
+    context['path_id'] = path_id
+    context['query'] = ''
+
+    if request.method == 'GET':
+        
+        # get all sources from db
+        path_dbo = ZPath.objects.get(pk=path_id)
+        source_dbo_lst = path_dbo.sources.all()
+
+        if 'query' in request.GET:
+            query = request.GET['query']
+
+            if query:
+
+                # search 
+                ## get all sources from cloud (Etag to use ?)
+                context['query'] = query
+
+                ytb_obj = ytb.ZYouTube(settings.GGL_KEY)
+                search_dct = ytb_obj.search(query, is_playlist=False, is_video=False)
+
+                ## Select stored source into db
+                channel_lst = search_dct['channel_lst']
+                channel_id_lst = [channel_dct['id'] for channel_dct in channel_lst]
+                source_dbo_lst = source_dbo_lst.filter(identifier__in=channel_id_lst)
+
+                ## get specific data for each content from cloud (use Etag !) [TODO]
+
+                # Keep only new source from cloud / remove/discard duplicated source from cloud
+                for source_dbo in source_dbo_lst:
+
+                    channel_idx = next((idx for idx, channel_dct in enumerate(channel_lst) if source_dbo.identifier == channel_dct['id']), None)
+
+                    ## Update data from cloud data
+                    # if source_dbo.etag != channel_lst[channel_idx].etag:
+                    # ZContentSource.objects.filter(pk=source_dbo.pk).update()
+
+                    channel_lst.pop(channel_idx)
+
+                # [convert to list to lost of dict or list of db]
+                # concatanate list
+                
+                # send data list
+
+                print(json.dumps( search_dct, indent=4 ))
+                context['search_dct'] = search_dct
+
+        context['source_dbo_lst'] = source_dbo_lst 
+
+    return render(request, 'path/sandbox/content.html', context)
+
+
