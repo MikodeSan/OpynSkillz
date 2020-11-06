@@ -30,14 +30,24 @@ class ZContentSource(models.Model):
 
     paths = models.ManyToManyField('ZPath', related_name='sources', blank=True)       # through='ZCategory_Product'
 
+    def __str__(self):
+        return "Source {} - {}: {} content(s), {} subscriber(s)".format(self.identifier, self.label, self.n_content, self.n_subscriber)
 
-class ZContent(models.Model):       # lesson / post
 
+class ZContent(models.Model):       # lesson / post / YT video
+
+    identifier = models.CharField('ID', max_length=256, default='')
     label = models.CharField('Label', max_length=256, default='', blank=False, null=False)
     description = models.TextField('Description', default='', blank=True)
+    thumbnail_url = models.URLField('Thumbnail URL', default='', blank=True)
+    published_t = models.DateTimeField('Published', auto_now=True, blank=True, null=True)
 
     is_complete = models.BooleanField('Complete', default=False, blank=True, null=False)
     url = models.URLField('URL', default='', blank=True, null=False)
 
-    parent = models.ForeignKey('self', related_name='children', on_delete=models.CASCADE, blank=True, null=True)
+    n_view = models.IntegerField('Nombre de vues', default=0)
 
+    source = models.ForeignKey('ZContentSource', related_name='contents', on_delete=models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        return "Content {} - {}: {} content(s)".format(self.identifier, self.label, self.n_view)

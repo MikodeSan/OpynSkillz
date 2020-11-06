@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
-from .models import ZPath, ZContentSource
+from .models import ZPath, ZContentSource, ZContent
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -249,49 +249,80 @@ def sandbox_source_contents(request, path_id, source_id):
 
     if request.method == 'GET':
         
-        # get all sources from db
+        # get source from db
         path_dbo = ZPath.objects.get(pk=path_id)
-        source_dbo_lst = path_dbo.sources.all()
+        source_dbo = path_dbo.sources.filter(identifier=source_id).get()
 
-        if 'query' in request.GET:
-            query = request.GET['query']
+        # get source contents from db
+        content_dbo_lst = source_dbo.contents.all()
+        print(content_dbo_lst)
 
-            if query:
+        # Update
+        if len(content_dbo_lst) < source_dbo.n_content:
 
-                # search 
-                ## get all sources from cloud (Etag to use ?)
-                context['query'] = query
+            ytb_obj = ytb.ZYouTube(settings.GGL_KEY)
+            content_dct_lst = ytb_obj.get_video_from_channel(channel_id=source_id)
 
-                ytb_obj = ytb.ZYouTube(settings.GGL_KEY)
-                search_dct = ytb_obj.search(query, is_playlist=False, is_video=False)
+            # update or create content
+            for content_dct in content_dct_lst:
 
-                ## Select stored source into db
-                channel_lst = search_dct['channel_lst']
-                channel_id_lst = [channel_dct['id'] for channel_dct in channel_lst]
-                source_dbo_lst = source_dbo_lst.filter(identifier__in=channel_id_lst)
+                # get content from db based on id
+                content_dbo, created = ZContent.objects.get_or_create(identifier=content_dct['id'])
 
-                ## get specific data for each content from cloud (use Etag !) [TODO]
+                # update
+                content_dct = {
+                    'label': content_dct['title'],
+                    'description': content_dct['description'],
+                    'thumbnail_url': content_dct['thumbnail_url'],
+                    'published_t': datetime.fromisoformat(content_dct['published_t'].replace('Z', '+00:00')).astimezone(None),  # tz = "Asia/Kolkata"
+                }
+                ZContent.objects.filter(pk=content_dbo.pk).update(**content_dct)
+                # content_dbo = ZContent.objects.get(pk=content_dbo.pk)
+                source_dbo.contents.add(content_dbo)
 
-                # Keep only new source from cloud / remove/discard duplicated source from cloud
-                for source_dbo in source_dbo_lst:
 
-                    channel_idx = next((idx for idx, channel_dct in enumerate(channel_lst) if source_dbo.identifier == channel_dct['id']), None)
+            # get source contents from db
+            content_dbo_lst = source_dbo.contents.all()
+            print(content_dbo_lst)
 
-                    ## Update data from cloud data
-                    # if source_dbo.etag != channel_lst[channel_idx].etag:
-                    # ZContentSource.objects.filter(pk=source_dbo.pk).update()
 
-                    channel_lst.pop(channel_idx)
+        # if 'query' in request.GET:
+        #     query = request.GET['query']
 
-                # [convert to list to lost of dict or list of db]
-                # concatanate list
+        #     if query:
+
+        #         # search 
+        #         ## get all sources from cloud (Etag to use ?)
+        #         context['query'] = query
+
+
+        #         ## Select stored source into db
+        #         channel_lst = search_dct['channel_lst']
+        #         channel_id_lst = [channel_dct['id'] for channel_dct in channel_lst]
+        #         source_dbo_lst = source_dbo_lst.filter(identifier__in=channel_id_lst)
+
+        #         ## get specific data for each content from cloud (use Etag !) [TODO]
+
+        #         # Keep only new source from cloud / remove/discard duplicated source from cloud
+        #         for source_dbo in source_dbo_lst:
+
+        #             channel_idx = next((idx for idx, channel_dct in enumerate(channel_lst) if source_dbo.identifier == channel_dct['id']), None)
+
+        #             ## Update data from cloud data
+        #             # if source_dbo.etag != channel_lst[channel_idx].etag:
+        #             # ZContentSource.objects.filter(pk=source_dbo.pk).update()
+
+        #             channel_lst.pop(channel_idx)
+
+        #         # [convert to list to lost of dict or list of db]
+        #         # concatanate list
                 
-                # send data list
+        #         # send data list
 
-                print(json.dumps( search_dct, indent=4 ))
-                context['search_dct'] = search_dct
+        #         print(json.dumps( search_dct, indent=4 ))
+        #         context['search_dct'] = search_dct
 
-        context['source_dbo_lst'] = source_dbo_lst 
+        context['content_dbo_lst'] = content_dbo_lst.order_by('-published_t') 
 
     return render(request, 'path/sandbox/content.html', context)
 

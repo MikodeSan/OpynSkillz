@@ -46,18 +46,18 @@
         <h4 class="mb-0 mt-5">Liste des vidéos</h4>
         <hr class="mt-2 mb-4" />
 
-        {% for source_dbo in source_dbo_lst %}        
+        {% for content_dbo in content_dbo_lst %}        
 
             <!-- Knowledge base main category card 1-->
             <div class="card card-icon lift lift-sm mb-4">
                 <div class="row no-gutters">
                     {% comment %} <div class="col-auto card-icon-aside bg-primary"><i class="text-white-50" data-feather="compass"></i></div> {% endcomment %}
-                    <div class="col-auto card-icon-aside bg-secondary"><img src="{{source_dbo.thumbnail_url}}" alt="{{source_dbo.label}}" style="width:96px;height:96px;"></div>
+                    <div class="col-auto card-icon-aside bg-secondary"><img src="{{content_dbo.thumbnail_url}}" alt="{{content_dbo.label}}" style="width:96px;height:96px;"></div>
                     <div class="col">
                         <div class="card-body py-4">
 
                             <div>
-                                <button id="subs_{{source_dbo.identifier}}" class="btn btn-pink btn-icon mr-2" onclick="subscribe(this, {{path_id}}, '{{source_dbo.identifier}}')" >
+                                <button id="subs_{{content_dbo.identifier}}" class="btn btn-pink btn-icon mr-2" onclick="subscribe(this, {{path_id}}, '{{content_dbo.identifier}}')" >
                                     <i class="fas fa-bookmark"></i>
                                 </button>
                                 <button class="btn btn-teal btn-icon mr-2">
@@ -68,8 +68,8 @@
                                 </button>
                             </div>
                             
-                            <h5 class="card-title text-secondary mb-2">{{source_dbo.label}}</h5>
-                            <p class="card-text mb-1">{{source_dbo.description}}</p>
+                            <h5 class="card-title text-secondary mb-2">{{content_dbo.label}}</h5>
+                            <p class="card-text mb-1">{{content_dbo.description}}</p>
                             <div class="small text-muted"></div>
                         </div>
                     </div>

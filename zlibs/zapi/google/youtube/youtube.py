@@ -55,27 +55,24 @@ class ZYouTube:
 
         while enable:
 
-            etag, response_dct = self.search("", is_channel=False, is_video=True, is_playlist=False, channel_id=channel_id, page_id=page_id, n_max=n)
-            page_info = response_dct['pageInfo']
+            response_dct = self.search("", is_channel=False, is_video=True, is_playlist=False, channel_id=channel_id, page_id=page_id, n_max=n)
+            # print('Hello', json.dumps(response_dct,indent=4))
+            next_page_id = response_dct['next_page_token']
 
             if is_first is True:
                 is_first = False
 
-            video_lst.extend(response_dct['items'])
+            video_lst.extend(response_dct['video_lst'])
 
-            if 'nextPageToken' in response_dct:
-                page_id = response_dct['nextPageToken']
+            if next_page_id:
+                page_id = next_page_id
                 print(page_id)
             else:
                 enable = False
-
-            n += page_info['resultsPerPage']
         
-            print(idx, len(response_dct['items']))
+            print(idx, len(response_dct['video_lst']))
             print(len(video_lst))
             idx += 1
-
-        # print(json.dumps(page_info,indent=4))             # sort_keys=True,
 
         # print(json.dumps(page_info,indent=4))             # sort_keys=True,
 
@@ -192,12 +189,12 @@ class ZYouTube:
         channel_lst = []
         playlist_lst = []
 
-        print(json.dumps(
-                response_dct,
-                # sort_keys=True,
-                indent=4,
-                )
-        )
+        # print(json.dumps(
+        #         response_dct,
+        #         # sort_keys=True,
+        #         indent=4,
+        #         )
+        # )
 
         # Add each result to the appropriate list, and then display the lists of
         # matching videos, channels, and playlists.
@@ -209,6 +206,7 @@ class ZYouTube:
             if result == 'youtube#video':
                 video_dct = {}
                 video_dct['id'] = search_result['id']['videoId']
+                video_dct['etag'] = search_result['etag']
                 video_dct['channel_id'] = snippet_dct['channelId']
                 video_dct['channel_title'] = snippet_dct['channelTitle']
                 video_dct['published_t'] = snippet_dct['publishedAt']
@@ -244,49 +242,49 @@ class ZYouTube:
         # print('Channels:\n', '\n'.join(channels), '\n')
         # print('Playlists:\n', '\n'.join(playlists), '\n')
 
-    # "kind": "youtube#searchListResponse",
-    #     "etag": "WJVnc8CiPr-4mzU_pQLrtfOuBsU",
-    #     "nextPageToken": "CDIQAA",
-    #     "regionCode": "FR",
-    #     "pageInfo": {
-    #         "totalResults": 481,
-    #         "resultsPerPage": 50
-    #     },
-    #     "items": [
-    #         {
-    #             "kind": "youtube#searchResult",
-    #             "etag": "9UpEKXy1qwmoHVvK-sHEvIjNJFk",
-    #             "id": {
-    #                 "kind": "youtube#video",
-    #                 "videoId": "wDAmezoNHJY"
-    #             },
-    #             "snippet": {
-    #                 "publishedAt": "2020-05-24T16:00:33Z",
-    #                 "channelId": "UCuX05oOKyjib6CONyOpj5cw",
-    #                 "title": "\ud83d\udcf7Les VRAIES 5 ERREURS du de\u0301butant en photo",
-    #                 "description": "Vous en avez sans doute d\u00e9j\u00e0 vu passer, des articles ou des vid\u00e9os sur \"les 5 erreurs du d\u00e9butant en photo\". Si tous ne sont pas inutiles, je pense qu'ils ...",
-    #                 "thumbnails": {
-    #                     "default": {
-    #                         "url": "https://i.ytimg.com/vi/wDAmezoNHJY/default.jpg",
-    #                         "width": 120,
-    #                         "height": 90
-    #                     },
-    #                     "medium": {
-    #                         "url": "https://i.ytimg.com/vi/wDAmezoNHJY/mqdefault.jpg",
-    #                         "width": 320,
-    #                         "height": 180
-    #                     },
-    #                     "high": {
-    #                         "url": "https://i.ytimg.com/vi/wDAmezoNHJY/hqdefault.jpg",
-    #                         "width": 480,
-    #                         "height": 360
-    #                     }
-    #                 },
-    #                 "channelTitle": "Apprendre la Photo",
-    #                 "liveBroadcastContent": "none",
-    #                 "publishTime": "2020-05-24T16:00:33Z"
-    #             }
-    #         },
+        # "kind": "youtube#searchListResponse",
+        #     "etag": "WJVnc8CiPr-4mzU_pQLrtfOuBsU",
+        #     "nextPageToken": "CDIQAA",
+        #     "regionCode": "FR",
+        #     "pageInfo": {
+        #         "totalResults": 481,
+        #         "resultsPerPage": 50
+        #     },
+        #     "items": [
+        #         {
+        #             "kind": "youtube#searchResult",
+        #             "etag": "9UpEKXy1qwmoHVvK-sHEvIjNJFk",
+        #             "id": {
+        #                 "kind": "youtube#video",
+        #                 "videoId": "wDAmezoNHJY"
+        #             },
+        #             "snippet": {
+        #                 "publishedAt": "2020-05-24T16:00:33Z",
+        #                 "channelId": "UCuX05oOKyjib6CONyOpj5cw",
+        #                 "title": "\ud83d\udcf7Les VRAIES 5 ERREURS du de\u0301butant en photo",
+        #                 "description": "Vous en avez sans doute d\u00e9j\u00e0 vu passer, des articles ou des vid\u00e9os sur \"les 5 erreurs du d\u00e9butant en photo\". Si tous ne sont pas inutiles, je pense qu'ils ...",
+        #                 "thumbnails": {
+        #                     "default": {
+        #                         "url": "https://i.ytimg.com/vi/wDAmezoNHJY/default.jpg",
+        #                         "width": 120,
+        #                         "height": 90
+        #                     },
+        #                     "medium": {
+        #                         "url": "https://i.ytimg.com/vi/wDAmezoNHJY/mqdefault.jpg",
+        #                         "width": 320,
+        #                         "height": 180
+        #                     },
+        #                     "high": {
+        #                         "url": "https://i.ytimg.com/vi/wDAmezoNHJY/hqdefault.jpg",
+        #                         "width": 480,
+        #                         "height": 360
+        #                     }
+        #                 },
+        #                 "channelTitle": "Apprendre la Photo",
+        #                 "liveBroadcastContent": "none",
+        #                 "publishTime": "2020-05-24T16:00:33Z"
+        #             }
+        #         },
 
         resp_dct = {}
         resp_dct['next_page_token'] = next_page_token
