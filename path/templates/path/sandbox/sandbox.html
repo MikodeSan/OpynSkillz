@@ -63,11 +63,17 @@
                                     <button id="subs_{{channel_dct.id}}" class="btn btn-pink btn-icon mr-2" onclick="subscribe(this, {{path_id}}, '{{channel_dct.id}}')" >
                                         <i class="far fa-bookmark"></i>
                                     </button>
-                                    <button class="btn btn-teal btn-icon mr-2">
-                                        <i data-feather="bookmark"></i>
-                                    </button>
                                     <button class="btn btn-blue btn-icon">
                                         <i data-feather="share"></i>
+                                    </button>
+                                    <button class="btn btn-blue btn-icon">
+                                        <i class="fas fa-file-video"></i>   {# far #}
+                                    </button>
+                                    <button class="btn btn-blue btn-icon">
+                                        <i class="fas fa-boxes"></i>
+                                    </button>
+                                    <button class="btn btn-blue btn-icon">
+                                        <i class="fas fa-layer-group"></i>
                                     </button>
                                 </div>
                                 
@@ -99,12 +105,18 @@
                                 <button id="subs_{{source_dbo.identifier}}" class="btn btn-pink btn-icon mr-2" onclick="subscribe(this, {{path_id}}, '{{source_dbo.identifier}}')" >
                                     <i class="fas fa-bookmark"></i>
                                 </button>
-                                <button class="btn btn-teal btn-icon mr-2">
-                                    <i data-feather="bookmark"></i>
-                                </button>
                                 <button class="btn btn-blue btn-icon">
                                     <i data-feather="share"></i>
                                 </button>
+                                <button class="btn btn-blue btn-icon">
+                                    <i class="fas fa-file-video"></i>   {# far #}
+                                </button>
+                                <button class="btn btn-blue btn-icon">
+                                    <i class="fas fa-boxes"></i>
+                                </button>
+                                <a class="btn btn-blue btn-icon" href="{% url 'path:sandbox_source_contents' path_id source_dbo.identifier %}">
+                                    <i class="fas fa-layer-group"></i>
+                                </a>
                             </div>
                             
                             <h5 class="card-title text-secondary mb-2">{{source_dbo.label}}</h5>
