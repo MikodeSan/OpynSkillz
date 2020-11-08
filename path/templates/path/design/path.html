@@ -14,6 +14,13 @@
                         </h1>
                         <div class="page-header-subtitle">The default page header layout with main content that overlaps the background of the page header</div>
                     </div>
+                    <div class="col-12 col-xl-auto mb-3">
+                        {% comment %} <button class="btn btn-sm btn-light text-primary active mr-2">Today</button> {% endcomment %}
+                        {% comment %} <button class="btn btn-sm btn-light text-primary mr-2">Month</button> {% endcomment %}
+                        {% comment %} <button class="btn btn-sm btn-light text-primary active"><i class="fas fa-folder-plus"></i></button> {% endcomment %}
+                        <button class="btn btn-sm btn-light text-primary active"><i class="fas fa-folder-plus"></i></button>
+                        <a class="" id="zsdfsbvsdfbgs" href="javascript:void(0);" role="button">
+                    </div>
                 </div>
             </div>
         </div>
@@ -39,8 +46,42 @@
                 spacing utility to give the container an equivilant, negative top margin to create the overlap effect.
             </div>
         </div>
+        <div class="row">
+            <div class="col-lg-9">
+                <!-- Basic Card-->
+                <div id="basic">
+                    <div class="card card-header-actions mb-4">
+                        <div class="card-header">
+                            Basic Card
+                            {% include "path/snippet/path_command.html" %}
+                        </div>
+                        <div class="card-body">
+                            <!-- Component Preview-->
+                            <h6 class="small text-muted font-weight-500" id="advancedDropdown">Card with Dropdown in Header:</h6>
+                            <div class="sbp-preview">
+                                <div class="sbp-preview-content bg-light">
+                                    <div class="card card-header-actions">
+                                        <div class="card-header">
+                                            Basic Card Example
+                                            {% include "path/snippet/path_command.html" %}
+                                        </div>
+                                        <div class="card-body">This is an example of a basic card.</div>
+                                    </div>
+                                </div>
+                                <div class="sbp-preview-text">
+                                    The example above is a basic card with a card header and a card body. You can extend the card using any of the features included with Bootstrap. You can use utility classes to extend the look and feel of cards as well.
+                                    <p class="mb-0">
+                                        <span class="font-weight-bold">Note:</span>
+                                        The card styling in SB Admin Pro looks best with a light background color due to the background color of the card header, card body, and box shadow.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>                
     </div>
-
 
     <script>
         {% comment %} var parse_source_query_url = "{% url 'path:source_query' %}" {% endcomment %}
