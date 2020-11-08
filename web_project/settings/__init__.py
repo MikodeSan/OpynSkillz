@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'path.apps.PathConfig',
     'django.contrib.staticfiles',
     'django_extensions',
+    'mptt',
     'django_crontab',
     'debug_toolbar',    
 ]

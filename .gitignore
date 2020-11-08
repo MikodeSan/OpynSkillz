@@ -175,6 +175,6 @@ dmypy.json
 
 #misc.
 /dat/im/
-zxprt/
+zreport/*
 
 zenvar*.py

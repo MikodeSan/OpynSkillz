@@ -1,0 +1,53 @@
+{% extends 'path/base.html' %}
+
+{% load static %}
+
+{% block header %}
+    <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+        <div class="container">
+            <div class="page-header-content pt-4">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col-auto mt-4">
+                        <h1 class="page-header-title">
+                            <div class="page-header-icon"><i data-feather="layout"></i></div>
+                            Overlap Header
+                        </h1>
+                        <div class="page-header-subtitle">The default page header layout with main content that overlaps the background of the page header</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+
+{% block content %}
+
+    <!-- Main page content-->
+    <div class="container mt-n10">
+        <div class="card">
+            <div class="card-header">Contenu</div>
+            <div class="card-body">
+                The page header by default uses the
+                <code>.pb-10</code>
+                spacing utility classes to add paddig to the bottom of the
+                <code>.page-header</code>
+                . Then, the first container within the
+                <code>main</code>
+                element uses the
+                <code>.mt-n10</code>
+                spacing utility to give the container an equivilant, negative top margin to create the overlap effect.
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        {% comment %} var parse_source_query_url = "{% url 'path:source_query' %}" {% endcomment %}
+        var parse_channel_subcription_url = "{% url 'path:channel_subscription' %}"
+    </script>
+    <script src="{% static 'path/js/zajax.js' %}"></script>
+    <script src="{% static 'path/js/zpath.js' %}"></script>
+
+{% endblock %}
+

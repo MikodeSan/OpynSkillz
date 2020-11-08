@@ -48,18 +48,14 @@ def channel(request):
     return render(request, 'path/channel.html', context)
 
 
-def path_new(request):
+def path_initialize(request):
 
     context = {}
-    context['Message'] = 'Hello Moto'
 
-    return render(request, 'path/path_new.html', context)
+    return render(request, 'path/path_initialize.html', context)
 
 
-def create_path(request):
-
-    context = {}
-    context['Message'] = 'Hello Moto'
+def path_create(request):
 
     if request.method == 'POST':
     
@@ -69,6 +65,20 @@ def create_path(request):
         path_dbo = ZPath.objects.create(label=label, description=description)
 
     return redirect('path:channel')
+
+def path_design(request, path_id):
+
+    # context = {}
+    # context['Message'] = 'Hello Moto'
+
+    # if request.method == 'POST':
+    
+    #     label = request.POST.get('path_label')
+    #     description = request.POST.get('description')
+        
+    #     path_dbo = ZPath.objects.create(label=label, description=description)
+
+    return render(request, 'path/design/path.html', locals())
 
 
 def sandbox(request, path_id):
