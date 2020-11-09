@@ -1,3 +1,26 @@
+// /* Add sub-path */
+// function add_sub_path(path_id, parent_id) {
+
+//     event.preventDefault();
+//     event.stopPropagation();
+
+//     let data = new FormData();
+//     data.append('root_path_id', path_id);
+//     data.append('parent_path_id', parent_id);
+
+//     zajaxPost(parse_add_path_url, data, add_sub_path_assert, ack, false);
+// }
+
+
+// /* Assert favorite setting */
+// async function add_sub_path_assert(reply_json) {
+
+//     let data = JSON.parse(reply_json);
+//     // console.log(typeof data.code);
+//     console.log(data);
+// }
+
+
 /* Set favorite state for the specified product */
 function search_source() {
 

@@ -2,6 +2,8 @@
 
 {% load static %}
 
+{% load mptt_tags %}
+
 {% block header %}
     <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
         <div class="container">
@@ -18,8 +20,11 @@
                         {% comment %} <button class="btn btn-sm btn-light text-primary active mr-2">Today</button> {% endcomment %}
                         {% comment %} <button class="btn btn-sm btn-light text-primary mr-2">Month</button> {% endcomment %}
                         {% comment %} <button class="btn btn-sm btn-light text-primary active"><i class="fas fa-folder-plus"></i></button> {% endcomment %}
-                        <button class="btn btn-sm btn-light text-primary active"><i class="fas fa-folder-plus"></i></button>
-                        <a class="" id="zsdfsbvsdfbgs" href="javascript:void(0);" role="button">
+                        {% comment %} <button class="btn btn-sm btn-light text-primary active"><i class="fas fa-folder-plus"></i></button> {% endcomment %}
+                        {% comment %} <button class="btn btn-pink btn-icon mr-2" onclick="add_sub_path({{path_id}}, 0)" >
+                            <i class="far fa-bookmark"></i>
+                        </button> {% endcomment %}
+                        <a class="btn btn-pink btn-icon mr-2" href="{% url 'path:new' path_id path_id %}" role="button"><i class="fas fa-folder-plus"></i></a>
                     </div>
                 </div>
             </div>
@@ -48,45 +53,52 @@
         </div>
         <div class="row">
             <div class="col-lg-9">
-                <!-- Basic Card-->
-                <div id="basic">
-                    <div class="card card-header-actions mb-4">
-                        <div class="card-header">
-                            Basic Card
-                            {% include "path/snippet/path_command.html" %}
-                        </div>
-                        <div class="card-body">
-                            <!-- Component Preview-->
-                            <h6 class="small text-muted font-weight-500" id="advancedDropdown">Card with Dropdown in Header:</h6>
-                            <div class="sbp-preview">
-                                <div class="sbp-preview-content bg-light">
-                                    <div class="card card-header-actions">
-                                        <div class="card-header">
-                                            Basic Card Example
-                                            {% include "path/snippet/path_command.html" %}
+                
+                <!-- Main Category -->
+                {% recursetree path_dbo_lst %}
+                    <div id="basic">
+                        <div class="card card-header-actions mb-4">
+                            <div class="card-header">
+                                {{ node.label }}
+                                {% include "path/snippet/path_command.html" %}
+                            </div>
+                            <div class="card-body">
+                                <!-- Component Preview-->
+                                <h6 class="small text-muted font-weight-500" id="advancedDropdown">Card with Dropdown in Header:</h6>
+                                <div class="sbp-preview">
+                                    <div class="sbp-preview-content bg-light">
+                                        <div class="card card-header-actions">
+                                            <div class="card-header">
+                                                Basic Card Example
+                                                {% include "path/snippet/path_command.html" %}
+                                            </div>
+                                            <div class="card-body">This is an example of a basic card.</div>
                                         </div>
-                                        <div class="card-body">This is an example of a basic card.</div>
                                     </div>
-                                </div>
-                                <div class="sbp-preview-text">
-                                    The example above is a basic card with a card header and a card body. You can extend the card using any of the features included with Bootstrap. You can use utility classes to extend the look and feel of cards as well.
-                                    <p class="mb-0">
-                                        <span class="font-weight-bold">Note:</span>
-                                        The card styling in SB Admin Pro looks best with a light background color due to the background color of the card header, card body, and box shadow.
-                                    </p>
+                                    <div class="sbp-preview-text">
+                                        The example above is a basic card with a card header and a card body. You can extend the card using any of the features included with Bootstrap. You can use utility classes to extend the look and feel of cards as well.
+                                        <p class="mb-0">
+                                            <span class="font-weight-bold">Note:</span>
+                                            The card styling in SB Admin Pro looks best with a light background color due to the background color of the card header, card body, and box shadow.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                    {% if not node.is_leaf_node %}
+                        <ul class="children">
+                            {{ children }}
+                        </ul>
+                    {% endif %}
+                {% endrecursetree %}
             </div>
         </div>                
     </div>
 
-    <script>
-        {% comment %} var parse_source_query_url = "{% url 'path:source_query' %}" {% endcomment %}
-        var parse_channel_subcription_url = "{% url 'path:channel_subscription' %}"
-    </script>
+    {% comment %} <script>
+        var parse_add_path_url = "{% url 'path:new' %}"
+    </script> {% endcomment %}
     <script src="{% static 'path/js/zajax.js' %}"></script>
     <script src="{% static 'path/js/zpath.js' %}"></script>
 

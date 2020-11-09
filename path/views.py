@@ -48,23 +48,48 @@ def channel(request):
     return render(request, 'path/channel.html', context)
 
 
-def path_initialize(request):
+def path_initialize(request, root_id=0, parent_id=0):
 
-    context = {}
+    # if request.method == 'POST':
+    
+    #     root_path_id = int(request.POST.get('root_path_id'))
+    #     parent_path_id = int(request.POST.get('parent_path_id'))
+    #     print('ROOT ID:', root_path_id, 'PARENT ID:', parent_path_id)
+        
+    return render(request, 'path/path_initialize.html', locals())
 
-    return render(request, 'path/path_initialize.html', context)
 
+def path_create(request, root_id, parent_id):
 
-def path_create(request):
+    ret = redirect('path:channel')
 
     if request.method == 'POST':
     
+        # Create new path
         label = request.POST.get('path_label')
         description = request.POST.get('description')
-        
+
         path_dbo = ZPath.objects.create(label=label, description=description)
 
-    return redirect('path:channel')
+
+        if root_id > 0:
+            # root_path_dbo = ZPath.objects.get(pk=root_id)
+
+            # Add new path as sub-path
+            parent_path_dbo = ZPath.objects.get(pk=parent_id)
+            path_dbo.move_to(parent_path_dbo, position='last-child')
+
+            # parent_path_dbo.children.add(path_dbo)
+            
+            # path_dbo.parent = parent_path_dbo
+            # path_dbo.save()
+            # path_dbo.refresh_from_db()
+
+
+            ret = redirect('path:design', root_id)
+
+    return ret
+
 
 def path_design(request, path_id):
 
@@ -77,6 +102,10 @@ def path_design(request, path_id):
     #     description = request.POST.get('description')
         
     #     path_dbo = ZPath.objects.create(label=label, description=description)
+
+    root_dbo = ZPath.objects.get(pk=path_id)
+    # path_dbo_lst = ZPath.objects.all()
+    path_dbo_lst = root_dbo.get_descendants(include_self=False)
 
     return render(request, 'path/design/path.html', locals())
 

@@ -1,16 +1,23 @@
 from django.db import models
+from mptt.models import MPTTModel, TreeForeignKey
+
 # from django.contrib.auth import get_user_model
 
 
-class ZPath(models.Model):
+class ZPath(MPTTModel):
     # code = models.BigIntegerField('Code', primary_key=True, default=0, null=False, unique=True)
-    label = models.CharField('Label', max_length=256, default='', blank=False, null=False)
+    label = models.CharField('Label', max_length=256, default='', blank=True)
     description = models.TextField('Description', default='', blank=True)
 
-    is_complete = models.TextField('Complete', default='', blank=True)
+    is_complete = models.BooleanField('Complete', default=False)
     
-    parent = models.ForeignKey('self', related_name='children', on_delete=models.CASCADE, blank=True, null=True)
+    parent = TreeForeignKey('self', related_name='children', on_delete=models.CASCADE, null=True, blank=True)
 
+    def __str__(self):
+        return "PK: {} - {} - Complete: {}".format(self.pk, self.label, self.is_complete)
+
+    # class MPTTMeta:
+    #     order_insertion_by = ['name']
 
 class ZContentSource(models.Model):
     identifier = models.CharField('ID', max_length=256, default='')
