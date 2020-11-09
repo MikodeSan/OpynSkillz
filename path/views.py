@@ -43,7 +43,7 @@ def channel(request):
     context['Message'] = 'Hello Moto'
 
     # path_lst_dbo = ZPath.objects.all()
-    context['path_dbo_lst'] = ZPath.objects.all()
+    context['path_dbo_lst'] = ZPath.objects.root_nodes()
 
     return render(request, 'path/channel.html', context)
 
@@ -96,10 +96,78 @@ def path_remove(request):
 
     if request.method == 'POST':
         
-        node_id = int(request.POST.get('node_path_id'))
+        node_id = int(request.POST.get('node_id'))
 
         ZPath.objects.get(pk=node_id).delete()
 
+        context['node_id'] = node_id
+
+    return HttpResponse( json.dumps( context ) )
+
+
+def path_move(request):
+    
+    context = {}
+
+    if request.method == 'POST':
+        
+        operation_id = request.POST.get('operation_id')
+        node_id = int(request.POST.get('node_id'))
+
+        path_dbo = ZPath.objects.get(pk=node_id)
+
+        if operation_id == 'parent':
+            # Become previous sibling of the parent
+            if path_dbo.parent.is_child_node():
+                path_dbo.move_to(path_dbo.parent, position='left')
+
+        elif operation_id == 'child':
+            # Become first child of the next sibling
+            next_path_dbo = path_dbo.get_next_sibling()
+            print(path_dbo, next_path_dbo)
+            if next_path_dbo:
+                path_dbo.move_to(next_path_dbo, position='first-child')
+
+
+        elif operation_id == 'previous':
+            # Become before the previous sibling
+            previous_path_dbo = path_dbo.get_previous_sibling()
+            if previous_path_dbo:
+                path_dbo.move_to(previous_path_dbo, position='left')
+
+        elif operation_id == 'next':
+            # Become after the next sibling
+            next_path_dbo = path_dbo.get_next_sibling()
+            if next_path_dbo:
+                path_dbo.move_to(next_path_dbo, position='right')
+
+
+        if path_dbo.parent:
+            parent_id = path_dbo.parent.pk
+        else:
+            parent_id = 0
+
+        previous_dbo = path_dbo.get_previous_sibling()
+        if previous_dbo:
+            previous_id = previous_dbo.pk
+        else:
+            previous_id = 0
+
+        next_dbo = path_dbo.get_next_sibling()
+        if next_dbo:
+            next_id = next_dbo.pk
+        else:
+            next_id = 0
+
+        print('PARENT ID', parent_id)
+        print('PREVIOUS ID', previous_id)
+        print('NEXT ID', next_id)
+        print('NODE ID', node_id)
+
+        context['operation_id'] = operation_id
+        context['parent_id'] = parent_id
+        # context['previous_id'] = previous_id
+        context['next_id'] = next_id
         context['node_id'] = node_id
 
     return HttpResponse( json.dumps( context ) )

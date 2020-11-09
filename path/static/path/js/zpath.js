@@ -28,7 +28,7 @@ function path_remove(node_id) {
     event.stopPropagation();
 
     let data = new FormData();
-    data.append('node_path_id', node_id);
+    data.append('node_id', node_id);
 
     zajaxPost(path_remove_url, data, path_remove_assert, ack, false);
 }
@@ -39,10 +39,63 @@ async function path_remove_assert(reply_json) {
 
     let data = JSON.parse(reply_json);
 
-    let node = document.getElementById('path_node_' + data.node_id);
+    let node = document.getElementById('path_card_' + data.node_id);
     node.remove();
 }
 
+
+/* Move path */
+function path_move(operation, node_id) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    let data = new FormData();
+    data.append('operation_id', operation);
+    data.append('node_id', node_id);
+
+    zajaxPost(path_move_url, data, path_move_assert, ack, false);
+}
+
+
+/* Assert remove path */
+async function path_move_assert(reply_json) {
+
+    let data = JSON.parse(reply_json);
+
+    let parent_node = document.getElementById('path_content_' + data.parent_id);
+    // let previous_node = document.getElementById('path_card_' + data.previous_id);
+    let next_node = document.getElementById('path_card_' + data.next_id);
+    // let next_content = document.getElementById('path_content_' + data.next_id);
+    let node = document.getElementById('path_card_' + data.node_id);
+
+    // if (data.operation_id == 'parent') {
+
+    //     if (parent_node) {
+    //         parent_node.insertBefore(node, next_node);
+    //     }
+
+    // } else if (data.operation_id == 'child') {
+
+    //     if (parent_node) {
+    //         parent_node.insertBefore(node, next_node);
+    //     }
+    // } else if (data.operation_id == 'previous') {
+
+    //     if (parent_node) {
+    //         parent_node.insertBefore(node, next_node);
+    //     }
+    // } else if (data.operation_id == 'next') {
+
+    //     if (parent_node) {
+    //         parent_node.insertBefore(node, next_node);
+    //     }
+    // }
+
+    if (parent_node) {
+        parent_node.insertBefore(node, next_node);
+    }
+}
 
 
 /* Set favorite state for the specified product */

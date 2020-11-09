@@ -22,27 +22,28 @@
     <button class="btn btn-pink btn-icon mr-2" onclick="path_remove({{node.pk}})"><i class="fas fa-trash-alt"></i></button>    {# fas fa-trash #}
     
 
-    <button class="btn btn-blue btn-icon"
+    <button class="btn btn-blue btn-icon" onclick="path_move('parent', {{node.pk}})"
     {% if node.level <= 1 %}
-        disabled
+        {% comment %} disabled {% endcomment %}
     {% endif %}    
     ><i class="fas fa-chevron-left"></i></button>
 
-    <button class="btn btn-blue btn-icon"
-    {% if node.is_leaf_node %}
-        disabled
+    <button class="btn btn-blue btn-icon" onclick="path_move('child', {{node.pk}})"
+    {% comment %} {% if node.is_leaf_node %} {% endcomment %}
+    {% if not node.get_next_sibling %}
+        {% comment %} disabled {% endcomment %}
     {% endif %}
     ><i class="fas fa-chevron-right"></i></button>
 
-    <button class="btn btn-blue btn-icon"
+    <button class="btn btn-blue btn-icon" onclick="path_move('previous', {{node.pk}})"
     {% if not node.get_previous_sibling %}
-        disabled
+        {% comment %} disabled {% endcomment %}
     {% endif %}
     ><i class="fas fa-chevron-up"></i></button>
     
-    <button class="btn btn-blue btn-icon"
+    <button class="btn btn-blue btn-icon" onclick="path_move('next', {{node.pk}})"
     {% if not node.get_next_sibling %}
-        disabled
+        {% comment %} disabled {% endcomment %}
     {% endif %}
     ><i class="fas fa-chevron-down"></i></button>
     {% comment %} <button class="btn btn-blue btn-icon"><i class="fas fa-caret-left"></i></button>
