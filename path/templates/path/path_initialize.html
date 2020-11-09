@@ -13,7 +13,7 @@
         <div id="default">
           <div class="card mb-4">
             <div class="card-header">Nouveau parcours</div>
-            <form action="{% url 'path:path_create' %}" method="post">
+            <form action="{% url 'path:create' root_id parent_id %}" method="post">
             {% comment %} <form class="form-inline justify-content-center" action="{% url 'path:home' %}" method="post"> {% endcomment %}
               {% csrf_token %}
               <div class="card-body">
@@ -62,7 +62,6 @@
               </div>
             {% comment %} <div class="sbp-preview-text">The default Bootstrap form control states have been restyled to fit the SB Admin Pro theme. The style has changed, but the markup is identical.</div> {% endcomment %}
             </form>
-
 
           </div>
         </div>

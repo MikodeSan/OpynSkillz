@@ -1,0 +1,111 @@
+{% extends 'path/base.html' %}
+
+{% load static %}
+
+{% load mptt_tags %}
+
+{% block header %}
+    <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+        <div class="container">
+            <div class="page-header-content pt-4">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col-auto mt-4">
+                        <h1 class="page-header-title">
+                            <div class="page-header-icon"><i data-feather="layout"></i></div>
+                            Overlap Header
+                        </h1>
+                        <div class="page-header-subtitle">The default page header layout with main content that overlaps the background of the page header</div>
+                    </div>
+                    <div class="col-12 col-xl-auto mb-3">
+                        {% comment %} <button class="btn btn-sm btn-light text-primary active mr-2">Today</button> {% endcomment %}
+                        {% comment %} <button class="btn btn-sm btn-light text-primary mr-2">Month</button> {% endcomment %}
+                        {% comment %} <button class="btn btn-sm btn-light text-primary active"><i class="fas fa-folder-plus"></i></button> {% endcomment %}
+                        {% comment %} <button class="btn btn-sm btn-light text-primary active"><i class="fas fa-folder-plus"></i></button> {% endcomment %}
+                        {% comment %} <button class="btn btn-pink btn-icon mr-2" onclick="add_sub_path({{path_id}}, 0)" >
+                            <i class="far fa-bookmark"></i>
+                        </button> {% endcomment %}
+                        <a class="btn btn-pink btn-icon mr-2" href="{% url 'path:new' path_id path_id %}" role="button"><i class="fas fa-folder-plus"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+
+{% block content %}
+
+    <!-- Main page content-->
+    <div class="container mt-n10">
+        <div class="card">
+            <div class="card-header">Contenu</div>
+            <div class="card-body">
+                The page header by default uses the
+                <code>.pb-10</code>
+                spacing utility classes to add paddig to the bottom of the
+                <code>.page-header</code>
+                . Then, the first container within the
+                <code>main</code>
+                element uses the
+                <code>.mt-n10</code>
+                spacing utility to give the container an equivilant, negative top margin to create the overlap effect.
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-9">
+                
+                <!-- Main Category -->
+                {% recursetree path_dbo_lst %}
+                    <div id="path_node_{{ node.pk }}">
+                        <div class="card card-header-actions mb-4">
+                            <div class="card-header">
+                                {{ node.label }}
+                                {% include "path/snippet/path_command.html" %}
+                            </div>
+                            <div class="card-body">
+                                <!-- Component Preview-->
+                                <h6 class="small text-muted font-weight-500" id="advancedDropdown">Card with Dropdown in Header:</h6>
+                                <div class="sbp-preview">
+                                    <div class="sbp-preview-content bg-light">
+
+                                        {% if not node.is_leaf_node %}
+                                            <ul class="children">
+                                                {{ children }}
+                                            </ul>
+                                        {% endif %}
+
+                                        {% comment %} <div class="card card-header-actions">
+                                            <div class="card-header">
+                                                Basic Card Example
+                                                {% include "path/snippet/path_command.html" %}
+                                            </div>
+                                            <div class="card-body">This is an example of a basic card.</div>
+                                        </div> {% endcomment %}
+                                    </div>
+                                    <div class="sbp-preview-text">
+                                        
+                                        <p class="mb-0">
+                                            <span class="font-weight-bold">Description:</span>
+                                            {{ node.description }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                {% endrecursetree %}
+            </div>
+        </div>                
+    </div>
+
+    <script>
+        var parse_add_path_url = "{% url 'path:new' %}"
+        var path_remove_url = "{% url 'path:remove' %}"
+    </script>
+    <script src="{% static 'path/js/zajax.js' %}"></script>
+    <script src="{% static 'path/js/zpath.js' %}"></script>
+
+{% endblock %}
+

@@ -24,9 +24,6 @@ PROJECT_DIR = os.path.join(BASE_DIR, 'web_project')
 sys.path.append(BASE_DIR)
 sys.path.append(PROJECT_DIR)
 
-from settings.zenvar import GGL_KEY
-
-
 class ZYouTube:
     
     YOUTUBE_API_SERVICE_NAME = 'youtube'
@@ -58,27 +55,24 @@ class ZYouTube:
 
         while enable:
 
-            etag, response_dct = self._search("", is_channel=False, is_video=True, is_playlist=False, channel_id=channel_id, page_id=page_id, n_max=n)
-            page_info = response_dct['pageInfo']
+            response_dct = self.search("", is_channel=False, is_video=True, is_playlist=False, channel_id=channel_id, page_id=page_id, n_max=n)
+            # print('Hello', json.dumps(response_dct,indent=4))
+            next_page_id = response_dct['next_page_token']
 
             if is_first is True:
                 is_first = False
 
-            video_lst.extend(response_dct['items'])
+            video_lst.extend(response_dct['video_lst'])
 
-            if 'nextPageToken' in response_dct:
-                page_id = response_dct['nextPageToken']
+            if next_page_id:
+                page_id = next_page_id
                 print(page_id)
             else:
                 enable = False
-
-            n += page_info['resultsPerPage']
         
-            print(idx, len(response_dct['items']))
+            print(idx, len(response_dct['video_lst']))
             print(len(video_lst))
             idx += 1
-
-        # print(json.dumps(page_info,indent=4))             # sort_keys=True,
 
         # print(json.dumps(page_info,indent=4))             # sort_keys=True,
 
@@ -135,7 +129,8 @@ class ZYouTube:
             response_dct = youtube.channels().list(**params_dct).execute()
             print(json.dumps(response_dct,indent=4))             # sort_keys=True,
 
-            if response_dct['pageInfo']['resultsPerPage']:
+            if response_dct['pageInfo']['resultsPerPage'] > 0:
+                # channel found
 
                 etag = response_dct['etag']
                 channel_dct = response_dct['items'][0]
@@ -143,7 +138,7 @@ class ZYouTube:
         return etag, channel_dct
 
 
-    def _search(self, query, is_channel=True, is_video=True, is_playlist=True, channel_id='', page_id='', n_max=0):
+    def search(self, query, is_channel=True, is_video=True, is_playlist=True, channel_id='', page_id='', n_max=0):
         """
         Call the search.list method to retrieve results matching the specified query term.
         """
@@ -184,10 +179,15 @@ class ZYouTube:
 
         etag = ''
         response_dct = youtube.search().list(**params_dct).execute()
+        
+        next_page_token = ''
+        if 'nextPageToken' in response_dct:
+            next_page_token = response_dct['nextPageToken']
+            
 
-        videos = []
-        channels = []
-        playlists = []
+        video_lst = []
+        channel_lst = []
+        playlist_lst = []
 
         # print(json.dumps(
         #         response_dct,
@@ -202,71 +202,98 @@ class ZYouTube:
 
             result = search_result['id']['kind']
             snippet_dct = search_result['snippet']
+
             if result == 'youtube#video':
-                videos.append('%s (%s)' % (search_result['snippet']['title'],
-                                        search_result['id']['videoId']))
+                video_dct = {}
+                video_dct['id'] = search_result['id']['videoId']
+                video_dct['etag'] = search_result['etag']
+                video_dct['channel_id'] = snippet_dct['channelId']
+                video_dct['channel_title'] = snippet_dct['channelTitle']
+                video_dct['published_t'] = snippet_dct['publishedAt']
+                video_dct['title'] = snippet_dct['title']
+                video_dct['description'] = snippet_dct['description']
+                video_dct['thumbnail_url'] = snippet_dct['thumbnails']['high']['url']
+
+                video_lst.append(video_dct)
             
             elif result == 'youtube#channel':
-                channels.append('{} ({}) {} {}'.format(snippet_dct['title'],
-                                                    snippet_dct['channelId'],
-                                                    snippet_dct['publishedAt'],
-                                                    snippet_dct['description'],
-                                                )
-                )
+                channel_dct = {}
+                channel_dct['id'] = search_result['id']['channelId']
+                channel_dct['published_t'] = snippet_dct['publishedAt']
+                channel_dct['title'] = snippet_dct['title']
+                channel_dct['description'] = snippet_dct['description']
+                channel_dct['thumbnail_url'] = snippet_dct['thumbnails']['high']['url']
+
+                channel_lst.append(channel_dct)
 
             elif result == 'youtube#playlist':
-                playlists.append('%s (%s)' % (search_result['snippet']['title'],
-                                            search_result['id']['playlistId']))
+                playlist_dct = {}
+                playlist_dct['id'] = search_result['id']['playlistId']
+                playlist_dct['channel_id'] = snippet_dct['channelId']
+                playlist_dct['channel_title'] = snippet_dct['channelTitle']
+                playlist_dct['published_t'] = snippet_dct['publishedAt']
+                playlist_dct['title'] = snippet_dct['title']
+                playlist_dct['description'] = snippet_dct['description']
+                playlist_dct['thumbnail_url'] = snippet_dct['thumbnails']['high']['url']
+
+                playlist_lst.append(playlist_dct)
 
         # print('Videos:\n   -', '\n   -'.join(videos), '\n') 
         # print('Channels:\n', '\n'.join(channels), '\n')
         # print('Playlists:\n', '\n'.join(playlists), '\n')
 
-    # "kind": "youtube#searchListResponse",
-    #     "etag": "WJVnc8CiPr-4mzU_pQLrtfOuBsU",
-    #     "nextPageToken": "CDIQAA",
-    #     "regionCode": "FR",
-    #     "pageInfo": {
-    #         "totalResults": 481,
-    #         "resultsPerPage": 50
-    #     },
-    #     "items": [
-    #         {
-    #             "kind": "youtube#searchResult",
-    #             "etag": "9UpEKXy1qwmoHVvK-sHEvIjNJFk",
-    #             "id": {
-    #                 "kind": "youtube#video",
-    #                 "videoId": "wDAmezoNHJY"
-    #             },
-    #             "snippet": {
-    #                 "publishedAt": "2020-05-24T16:00:33Z",
-    #                 "channelId": "UCuX05oOKyjib6CONyOpj5cw",
-    #                 "title": "\ud83d\udcf7Les VRAIES 5 ERREURS du de\u0301butant en photo",
-    #                 "description": "Vous en avez sans doute d\u00e9j\u00e0 vu passer, des articles ou des vid\u00e9os sur \"les 5 erreurs du d\u00e9butant en photo\". Si tous ne sont pas inutiles, je pense qu'ils ...",
-    #                 "thumbnails": {
-    #                     "default": {
-    #                         "url": "https://i.ytimg.com/vi/wDAmezoNHJY/default.jpg",
-    #                         "width": 120,
-    #                         "height": 90
-    #                     },
-    #                     "medium": {
-    #                         "url": "https://i.ytimg.com/vi/wDAmezoNHJY/mqdefault.jpg",
-    #                         "width": 320,
-    #                         "height": 180
-    #                     },
-    #                     "high": {
-    #                         "url": "https://i.ytimg.com/vi/wDAmezoNHJY/hqdefault.jpg",
-    #                         "width": 480,
-    #                         "height": 360
-    #                     }
-    #                 },
-    #                 "channelTitle": "Apprendre la Photo",
-    #                 "liveBroadcastContent": "none",
-    #                 "publishTime": "2020-05-24T16:00:33Z"
-    #             }
-    #         },
+        # "kind": "youtube#searchListResponse",
+        #     "etag": "WJVnc8CiPr-4mzU_pQLrtfOuBsU",
+        #     "nextPageToken": "CDIQAA",
+        #     "regionCode": "FR",
+        #     "pageInfo": {
+        #         "totalResults": 481,
+        #         "resultsPerPage": 50
+        #     },
+        #     "items": [
+        #         {
+        #             "kind": "youtube#searchResult",
+        #             "etag": "9UpEKXy1qwmoHVvK-sHEvIjNJFk",
+        #             "id": {
+        #                 "kind": "youtube#video",
+        #                 "videoId": "wDAmezoNHJY"
+        #             },
+        #             "snippet": {
+        #                 "publishedAt": "2020-05-24T16:00:33Z",
+        #                 "channelId": "UCuX05oOKyjib6CONyOpj5cw",
+        #                 "title": "\ud83d\udcf7Les VRAIES 5 ERREURS du de\u0301butant en photo",
+        #                 "description": "Vous en avez sans doute d\u00e9j\u00e0 vu passer, des articles ou des vid\u00e9os sur \"les 5 erreurs du d\u00e9butant en photo\". Si tous ne sont pas inutiles, je pense qu'ils ...",
+        #                 "thumbnails": {
+        #                     "default": {
+        #                         "url": "https://i.ytimg.com/vi/wDAmezoNHJY/default.jpg",
+        #                         "width": 120,
+        #                         "height": 90
+        #                     },
+        #                     "medium": {
+        #                         "url": "https://i.ytimg.com/vi/wDAmezoNHJY/mqdefault.jpg",
+        #                         "width": 320,
+        #                         "height": 180
+        #                     },
+        #                     "high": {
+        #                         "url": "https://i.ytimg.com/vi/wDAmezoNHJY/hqdefault.jpg",
+        #                         "width": 480,
+        #                         "height": 360
+        #                     }
+        #                 },
+        #                 "channelTitle": "Apprendre la Photo",
+        #                 "liveBroadcastContent": "none",
+        #                 "publishTime": "2020-05-24T16:00:33Z"
+        #             }
+        #         },
 
-        return etag, response_dct
+        resp_dct = {}
+        resp_dct['next_page_token'] = next_page_token
+        resp_dct['channel_lst'] = channel_lst
+        resp_dct['video_lst'] = video_lst
+        resp_dct['playlist_lst'] = playlist_lst
+
+        return resp_dct
+
 
     def __build(self):
 
@@ -320,11 +347,12 @@ class ZYouTube:
 
 if __name__ == '__main__':
 
+    from settings.zenvar import GGL_KEY
 
     ytb_obj = ZYouTube(GGL_KEY)
 
     # etag, response_dct = ytb_obj._search("apprendre la photo", is_video=False)
-    etag, response_dct = ytb_obj._search("thomas hammoudi", is_video=False)
+    etag, response_dct = ytb_obj.search("thomas hammoudi", is_video=False)
     # etag, channel_dct = ytb_obj.get_channel(channel_id='UCuX05oOKyjib6CONyOpj5cw')
     print(json.dumps(response_dct,indent=4))             # sort_keys=True,
 
