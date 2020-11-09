@@ -21,6 +21,30 @@
 // }
 
 
+/* Remove path */
+function path_remove(node_id) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    let data = new FormData();
+    data.append('node_path_id', node_id);
+
+    zajaxPost(path_remove_url, data, path_remove_assert, ack, false);
+}
+
+
+/* Assert remove path */
+async function path_remove_assert(reply_json) {
+
+    let data = JSON.parse(reply_json);
+
+    let node = document.getElementById('path_node_' + data.node_id);
+    node.remove();
+}
+
+
+
 /* Set favorite state for the specified product */
 function search_source() {
 

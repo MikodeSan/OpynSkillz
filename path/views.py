@@ -90,6 +90,20 @@ def path_create(request, root_id, parent_id):
 
     return ret
 
+def path_remove(request):
+
+    context = {}
+
+    if request.method == 'POST':
+        
+        node_id = int(request.POST.get('node_path_id'))
+
+        ZPath.objects.get(pk=node_id).delete()
+
+        context['node_id'] = node_id
+
+    return HttpResponse( json.dumps( context ) )
+
 
 def path_design(request, path_id):
 
@@ -214,7 +228,7 @@ def add_youtube_channel_2_path(request):
             param_dct['label'] = snippet_dct['title']
             # param_dct['url'] = snippet_dct['']
             param_dct['description'] = snippet_dct['description']
-            param_dct['published_t'] = datetime.strptime(snippet_dct['publishedAt'], '%Y-%m-%dT%H:%M:%SZ')             
+            param_dct['published_t'] = datetime.fromisoformat(snippet_dct['publishedAt'].replace('Z', '+00:00')).astimezone(None)  # tz = "Asia/Kolkata" datetime.strptime(snippet_dct['publishedAt'], '%Y-%m-%dT%H:%M:%SZ')
             param_dct['thumbnail_url'] = snippet_dct['thumbnails']['high']['url']
             param_dct['country'] = snippet_dct['country']
 

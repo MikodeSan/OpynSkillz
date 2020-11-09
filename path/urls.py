@@ -10,6 +10,7 @@ urlpatterns = [
     path('channel/path/new', views.path_initialize, name='new'),
     path('channel/path/new/root/<int:root_id>/parent/<int:parent_id>', views.path_initialize, name='new'),
     path('channel/path/create/root/<int:root_id>/parent/<int:parent_id>', views.path_create, name='create'),
+    path('channel/path/remove', views.path_remove, name='remove'),
     path('channel/design/path/<int:path_id>', views.path_design, name='design'),
     # path('channel/sandbox', views.sandbox, name='sandbox'),
     path('channel/design/path/<int:path_id>/sandbox', views.sandbox, name='sandbox'),
