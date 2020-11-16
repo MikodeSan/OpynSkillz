@@ -16,6 +16,8 @@ urlpatterns = [
     # path('channel/sandbox', views.sandbox, name='sandbox'),
     path('channel/design/path/<int:path_id>/sandbox', views.sandbox, name='sandbox'),
     path('channel/design/path/<int:path_id>/sandbox/source/<str:source_id>/contents', views.sandbox_source_contents, name='sandbox_source_contents'),
+    path('channel/design/path/sandbox/source/content/add', views.sandbox_content_add, name='content_add'),
+
     # path('channel/source_query', views.parse_source_query, name='source_query'),      deprecated
 
     path('channel/parse/subscription', views.add_youtube_channel_2_path, name='channel_subscription'),

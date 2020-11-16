@@ -55,6 +55,15 @@ class ZContent(models.Model):       # lesson / post / YT video
     n_view = models.IntegerField('Nombre de vues', default=0)
 
     source = models.ForeignKey('ZContentSource', related_name='contents', on_delete=models.CASCADE, blank=True, null=True)
+    # paths = models.ForeignKey('ZContentSource', related_name='contents', on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        return "Content {} - {}: {} content(s)".format(self.identifier, self.label, self.n_view)
+        return "Content {} - {}: {} view(s)".format(self.identifier, self.label, self.n_view)
+
+
+# class ZContentVideo(models.Model):       # lesson / post / YT video
+
+# class ZContentText(models.Model):       # lesson / post / YT video
+
+# class ZContentFile(models.Model):       # lesson / post / YT video
+

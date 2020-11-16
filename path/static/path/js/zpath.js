@@ -189,3 +189,74 @@ async function subscribe_assert(reply_json) {
         }
     }
 }
+
+document.querySelectorAll('.dummy').forEach(item => {
+    item.addEventListener('click', event => {
+
+        let lst = document.getElementsByClassName("dummy active");
+        var i;
+        for (el of lst) {
+            el.classList.remove("active");
+        }
+
+        console.log(item);
+        lst = item.classList;
+        console.log(lst);
+        lst = item.classList.toggle("active");
+    })
+})
+
+
+function content_add(element, root_path_id, source_id, content_id) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    let img = element.children;
+    im_type = img[0].getAttribute('data-prefix');
+
+    let data = new FormData();
+    if (im_type == 'far') {
+        data.append('enable', true);
+    } else {
+        data.append('enable', false);
+    }
+
+    data.append('root_path_id', root_path_id);
+
+    let lst = document.getElementsByClassName("dummy active");
+    console.log(lst)
+    if (lst.length) {
+        // path_id = lst[0].getAttribute("data-target")
+        path_id = lst[0].getAttribute("data-target")
+    } else {
+        path_id = 0
+    }
+    data.append('path_id', path_id);
+
+    data.append('source_id', source_id);
+    data.append('content_id', content_id);
+
+    zajaxPost(parse_content_add_url, data, content_add_assert, ack, false);
+}
+
+
+/* Assert favorite setting */
+async function content_add_assert(reply_json) {
+
+    let data = JSON.parse(reply_json);
+
+    if ('path_id' in data) {
+
+        /* Toggle image state */
+        let element = document.getElementById("subs_" + data.ytb_channel_id);
+        let img = element.children;
+
+        im_type = img[0].getAttribute('data-prefix');
+        if (im_type == 'far') {
+            img[0].setAttribute('data-prefix', 'fas');
+        } else {
+            img[0].setAttribute('data-prefix', 'far');
+        }
+    }
+}

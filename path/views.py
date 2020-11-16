@@ -266,6 +266,7 @@ def parse_source_query(request):
 
     return HttpResponse( json.dumps( context ) )
 
+
 def add_youtube_channel_2_path(request):
 
     context = {}
@@ -366,7 +367,7 @@ def sandbox_source_contents(request, path_id, source_id):
     
     context = {}
     context['path_id'] = path_id
-    context['query'] = ''
+    context['source_id'] = source_id
 
     if request.method == 'GET':
         
@@ -379,7 +380,7 @@ def sandbox_source_contents(request, path_id, source_id):
         print(content_dbo_lst)
 
         # Update
-        if len(content_dbo_lst) < source_dbo.n_content:
+        if True: # len(content_dbo_lst) < source_dbo.n_content:
 
             ytb_obj = ytb.ZYouTube(settings.GGL_KEY)
             content_dct_lst = ytb_obj.get_video_from_channel(channel_id=source_id)
@@ -400,6 +401,7 @@ def sandbox_source_contents(request, path_id, source_id):
                 ZContent.objects.filter(pk=content_dbo.pk).update(**content_dct)
                 # content_dbo = ZContent.objects.get(pk=content_dbo.pk)
                 source_dbo.contents.add(content_dbo)
+                print(content_dbo, 'Created:', created)
 
 
             # get source contents from db
@@ -443,8 +445,33 @@ def sandbox_source_contents(request, path_id, source_id):
         #         print(json.dumps( search_dct, indent=4 ))
         #         context['search_dct'] = search_dct
 
-        context['content_dbo_lst'] = content_dbo_lst.order_by('-published_t') 
+            context['content_dbo_lst'] = content_dbo_lst.order_by('-published_t')
+
+        context['path_dbo_lst'] = path_dbo.get_descendants(include_self=False)
 
     return render(request, 'path/sandbox/content.html', context)
+
+
+def sandbox_content_add(request):
+
+    context = {}
+
+    iroot_path_id = int(request.POST.get('root_path_id'))
+    ipath_id = int(request.POST.get('path_id'))
+    sytb_channel_id = request.POST.get('channel_id')
+    icontent_id = int(request.POST.get('content_id'))
+    enable = request.POST.get('enable')
+
+    
+    content_dbo = ZContent.objects.get(pk=icontent_id)
+
+    if ipath_id:
+        path_dbo = ZPath.objects.get(pk=ipath_id)
+    else:
+        path_dbo = ZPath.objects.get(pk=iroot_path_id).get_children()[0]
+
+    print('Store: Content {} to Path {}'.format(content_dbo, path_dbo))
+
+    return HttpResponse( json.dumps( context ) )
 
 
