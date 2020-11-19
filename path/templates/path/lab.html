@@ -91,15 +91,15 @@
       </div>
       <div class="card-body">
 
-        {% for path_dbo in path_dbo_lst %}
+        {% for root_dbo in root_dbo_lst %}
 
-        {% comment %} <a id='path_{{path_dbo.pk}}' class="lift lift-sm mb-4" href="#"> {% endcomment %}
+        {% comment %} <a id='path_{{root_dbo.pk}}' class="lift lift-sm mb-4" href="#"> {% endcomment %}
           <div class="card card-header-actions mb-4">
             <div class="card-header">
-                {{path_dbo.label}}
+                {{root_dbo.content_object}} - {{root_dbo.content_object.label}}
                 <button class="btn btn-sm btn-primary" type="button">Edit</button>
-                <a id='path_lnk_{{path_dbo.pk}}' class="btn btn-sm btn-primary p-3 line-height-normal" href="{% url 'path:design' path_dbo.pk %}"><i class="fas fa-sitemap"></i>{#<i class="fas fa-project-diagram"></i>#} Edit</a>
-                <a id='sndbx_{{path_dbo.pk}}' class="btn btn-sm btn-primary p-3 line-height-normal" href="{% url 'path:sandbox' path_dbo.pk %}"><i class="fas fa-cloud-download-alt"></i> Abonnements</a>
+                <a id='path_lnk_{{root_dbo.pk}}' class="btn btn-sm btn-primary p-3 line-height-normal" href="{% url 'path:path' root_dbo.pk %}"><i class="fas fa-project-diagram"></i>{# fa-project-diagram fa-sitemap #}Edit</a>
+                <a id='sndbx_{{root_dbo.pk}}' class="btn btn-sm btn-primary p-3 line-height-normal" href="{% url 'path:sandbox' root_dbo.pk %}"><i class="fas fa-cloud-download-alt"></i> Abonnements</a>
             </div>
             <div class="card-body py-4">
 
@@ -108,7 +108,7 @@
                 <div class="d-flex align-items-center">
                   <!-- Account privacy optinos-->
                   <h5 class="mb-1">Account Privacy</h5>
-                  <p class="small text-muted">{{path_dbo.description}}</p>
+                  <p class="small text-muted">{{root_dbo.content_object.description}}</p>
                   <hr class="my-4" />
                   <p class="small text-muted">blablabla</p>
                 </div>

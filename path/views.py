@@ -9,7 +9,9 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
-from .models import ZPathNode, ZPostNode, ZSource, ZContent
+from . import models
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,51 +39,31 @@ def index(request):
     return render(request, 'path/index.html', context)        # locals()
 
 
-def channel(request):
+def lab_view(request):
     
-    context = {}
-    context['Message'] = 'Hello Moto'
+    root_dbo_lst = models.ZTreeNode.objects.root_nodes()
 
-    # path_lst_dbo = ZPathNode.objects.all()
-    context['path_dbo_lst'] = ZPathNode.objects.root_nodes()
-
-    return render(request, 'path/channel.html', context)
+    return render(request, 'path/lab.html', locals())
 
 
-def path_design(request, path_id):
+def path_view(request, root_id):
 
-    # context = {}
-    # context['Message'] = 'Hello Moto'
+    root_dbo = models.ZTreeNode.objects.get(pk=root_id)
+    node_dbo_lst = root_dbo.get_descendants(include_self=False)
 
-    # if request.method == 'POST':
-    
-    #     label = request.POST.get('path_label')
-    #     description = request.POST.get('description')
-        
-    #     path_dbo = ZPathNode.objects.create(label=label, description=description)
-
-    root_dbo = ZPathNode.objects.get(pk=path_id)
-    # path_dbo_lst = ZPathNode.objects.all()
-    path_dbo_lst = root_dbo.get_descendants(include_self=False)
-
-    return render(request, 'path/design/path.html', locals())
+    return render(request, 'path/lab/path.html', locals())
 
 
-def path_initialize(request, root_id=0, node_id=0):
+def path_create_view(request, root_id=0, node_id=0):
 
     element_type = 'path'
-    # if request.method == 'POST':
-    
-    #     root_path_id = int(request.POST.get('root_path_id'))
-    #     parent_path_id = int(request.POST.get('parent_path_id'))
-    #     print('ROOT ID:', root_path_id, 'PARENT ID:', parent_path_id)
         
-    return render(request, 'path/path_initialize.html', locals())
+    return render(request, 'path/path_form.html', locals())
 
 
 def path_create(request, root_id, node_id):
 
-    ret = redirect('path:channel')
+    ret = redirect('path:lab')
 
     if request.method == 'POST':
     
@@ -89,24 +71,25 @@ def path_create(request, root_id, node_id):
         label = request.POST.get('path_label')
         description = request.POST.get('description')
 
-        path_dbo = ZPathNode.objects.create(label=label, description=description)
-
+        path_dbo = models.ZPath.objects.create(label=label, description=description)
+        node_dbo = models.ZTreeNode.objects.create(content_object=path_dbo)
+        print(node_dbo, node_dbo.content_type, node_dbo.content_object, path_dbo)
 
         if root_id > 0:
-            # root_path_dbo = ZPathNode.objects.get(pk=root_id)
 
             # Add new path as sub-path
-            parent_path_dbo = ZPathNode.objects.get(pk=node_id)
-            path_dbo.move_to(parent_path_dbo, position='last-child')
+            parent_dbo = models.ZTreeNode.objects.get(pk=node_id)
+            node_dbo.move_to(parent_dbo, position='last-child')
 
-            # parent_path_dbo.children.add(path_dbo)
+            # # Alternative 1
+            # parent_dbo.children.add(path_dbo)
             
-            # path_dbo.parent = parent_path_dbo
-            # path_dbo.save()
-            # path_dbo.refresh_from_db()
+            # # Alternative 2
+            # node_dbo.parent = parent_path_dbo
+            # node_dbo.save()
+            # node_dbo.refresh_from_db()
 
-
-            ret = redirect('path:design', root_id)
+            ret = redirect('path:path', root_id)
 
     return ret
 
@@ -119,7 +102,7 @@ def path_remove(request):
         
         node_id = int(request.POST.get('node_id'))
 
-        ZPathNode.objects.get(pk=node_id).delete()
+        models.ZPath.objects.get(pk=node_id).delete()
 
         context['node_id'] = node_id
 
@@ -135,15 +118,15 @@ def path_move(request):
         operation_id = request.POST.get('operation_id')
         node_id = int(request.POST.get('node_id'))
 
-        path_dbo = ZPathNode.objects.get(pk=node_id)
+        path_dbo = models.ZPath.objects.get(pk=node_id)
         
-        dbo_lst = ZPostNode.objects.filter(pk=node_id)
+        dbo_lst = models.ZPost.objects.filter(pk=node_id)
         if dbo_lst:
-            print('Is Post:', dbo_lst, isinstance(dbo_lst[0], ZPostNode))
+            print('Is Post:', dbo_lst, isinstance(dbo_lst[0], models.ZPost))
         else:
-            dbo_lst = ZPathNode.objects.filter(pk=node_id)
+            dbo_lst = models.ZPath.objects.filter(pk=node_id)
             if dbo_lst:
-                print('Is Path:', dbo_lst, isinstance(dbo_lst[0], ZPathNode))
+                print('Is Path:', dbo_lst, isinstance(dbo_lst[0], models.ZPath))
 
         if operation_id == 'parent':
             # Become previous sibling of the parent
@@ -208,11 +191,11 @@ def post_initialize(request, root_id=0, node_id=0):
 
     element_type = 'post'
 
-    return render(request, 'path/path_initialize.html', locals())
+    return render(request, 'path/path_form.html', locals())
 
 def post_create(request, root_id, node_id):
 
-    ret = redirect('path:design', root_id)
+    ret = redirect('path:path', root_id)
 
     if request.method == 'POST':
     
@@ -220,17 +203,29 @@ def post_create(request, root_id, node_id):
         label = request.POST.get('path_label')
         description = request.POST.get('description')
 
-        post_dbo = ZPostNode.objects.create(label=label, description=description)
+        post_dbo = models.ZPost.objects.create(label=label, description=description)
+        txt_dbo = TextNode.objects.create(extra_text=label)
 
         if root_id > 0 and node_id > 0:
 
             # Add new path as sub-path
-            path_node_dbo = ZPathNode.objects.get(pk=node_id)
+            path_node_dbo = models.ZPath.objects.get(pk=node_id)
             post_dbo.move_to(path_node_dbo, position='last-child')
 
-            ret = redirect('path:design', root_id)
+            # Add new path as sub-path
+            prev_txt_dbo = models.ZPath.objects.get(pk=node_id)
+            post_dbo.move_to(path_node_dbo, position='last-child')
+
+
+            prev_txt_dbo = txt_dbo.get_previous_sibling()
+            print(txt_dbo, prev_txt_dbo)
+            if prev_txt_dbo:
+                txt_dbo.move_to(prev_txt_dbo, position='first-child')
+
+
+            ret = redirect('path:path', root_id)
         else:
-            ret = redirect('path:channel')
+            ret = redirect('path:lab')
 
     return ret
 
@@ -244,7 +239,7 @@ def sandbox(request, path_id):
     if request.method == 'GET':
         
         # get all sources from db
-        path_dbo = ZPathNode.objects.get(pk=path_id)
+        path_dbo = models.ZPath.objects.get(pk=path_id)
         source_dbo_lst = path_dbo.sources.all()
 
         if 'query' in request.GET:
@@ -273,7 +268,7 @@ def sandbox(request, path_id):
 
                     ## Update data from cloud data
                     # if source_dbo.etag != channel_lst[channel_idx].etag:
-                    # ZSource.objects.filter(pk=source_dbo.pk).update()
+                    # models.ZSource.objects.filter(pk=source_dbo.pk).update()
 
                     channel_lst.pop(channel_idx)
 
@@ -319,16 +314,16 @@ def add_youtube_channel_2_path(request):
     enable = request.POST.get('enable')
 
     try:
-        path_dbo = ZPathNode.objects.get(pk=ipath_id)
+        path_dbo = models.ZPath.objects.get(pk=ipath_id)
     except ObjectDoesNotExist:
-        print("CRITICAL ERROR: ZPathNode doesn't exist.")
+        print("CRITICAL ERROR: ZPath doesn't exist.")
     except MultipleObjectsReturned:
-        print("CRITICAL ERROR: ZPathNode multiple instances")
+        print("CRITICAL ERROR: ZPath multiple instances")
     else:
         if enable == 'true':
 
             # update source of contents from cloud
-            source_dbo, created = ZSource.objects.get_or_create(identifier=sytb_channel_id)
+            source_dbo, created = models.ZSource.objects.get_or_create(identifier=sytb_channel_id)
 
             ytb_obj = ytb.ZYouTube(settings.GGL_KEY)
             etag, channel_dct = ytb_obj.get_channel(source_dbo.identifier)
@@ -394,7 +389,7 @@ def add_youtube_channel_2_path(request):
 
             path_dbo.sources.add(source_dbo)
         else:
-            source_dbo = ZSource.objects.get(identifier=sytb_channel_id)
+            source_dbo = models.ZSource.objects.get(identifier=sytb_channel_id)
             path_dbo.sources.remove(source_dbo)
 
         context['path_id'] = ipath_id
@@ -415,7 +410,7 @@ def sandbox_source_contents(request, path_id, source_id):
     if request.method == 'GET':
         
         # get source from db
-        path_dbo = ZPathNode.objects.get(pk=path_id)
+        path_dbo = models.ZPath.objects.get(pk=path_id)
         source_dbo = path_dbo.sources.filter(identifier=source_id).get()
 
         # get source contents from db
@@ -432,7 +427,7 @@ def sandbox_source_contents(request, path_id, source_id):
             for content_dct in content_dct_lst:
 
                 # get content from db based on id
-                content_dbo, created = ZContent.objects.get_or_create(identifier=content_dct['id'])
+                content_dbo, created = models.ZContent.objects.get_or_create(identifier=content_dct['id'])
 
                 # update
                 content_dct = {
@@ -441,8 +436,8 @@ def sandbox_source_contents(request, path_id, source_id):
                     'thumbnail_url': content_dct['thumbnail_url'],
                     'published_t': datetime.fromisoformat(content_dct['published_t'].replace('Z', '+00:00')).astimezone(None),  # tz = "Asia/Kolkata"
                 }
-                ZContent.objects.filter(pk=content_dbo.pk).update(**content_dct)
-                # content_dbo = ZContent.objects.get(pk=content_dbo.pk)
+                models.ZContent.objects.filter(pk=content_dbo.pk).update(**content_dct)
+                # content_dbo = models.ZContent.objects.get(pk=content_dbo.pk)
                 source_dbo.contents.add(content_dbo)
                 print(content_dbo, 'Created:', created)
 
@@ -476,7 +471,7 @@ def sandbox_source_contents(request, path_id, source_id):
 
         #             ## Update data from cloud data
         #             # if source_dbo.etag != channel_lst[channel_idx].etag:
-        #             # ZSource.objects.filter(pk=source_dbo.pk).update()
+        #             # models.ZSource.objects.filter(pk=source_dbo.pk).update()
 
         #             channel_lst.pop(channel_idx)
 
@@ -506,12 +501,12 @@ def sandbox_content_add(request):
     enable = request.POST.get('enable')
 
     
-    content_dbo = ZContent.objects.get(pk=icontent_id)
+    content_dbo = models.ZContent.objects.get(pk=icontent_id)
 
     if ipath_id:
-        path_dbo = ZPathNode.objects.get(pk=ipath_id)
+        path_dbo = models.ZPath.objects.get(pk=ipath_id)
     else:
-        path_dbo = ZPathNode.objects.get(pk=iroot_path_id).get_children()[0]
+        path_dbo = models.ZPath.objects.get(pk=iroot_path_id).get_children()[0]
 
     print('Store: Content {} to Path {}'.format(content_dbo, path_dbo))
 

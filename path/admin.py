@@ -48,21 +48,27 @@ MPTT_ADMIN_LEVEL_INDENT = 20
 #         }
 
 
-admin.site.register(models.ZPathNode, DraggableMPTTAdmin)
+admin.site.register(models.ZTreeNode, DraggableMPTTAdmin)
+admin.site.register(models.ZPath)
 
-admin.site.register(models.ZPostNode)
-admin.site.register(models.Post)
-admin.site.register(models.TesyPost, MPTTModelAdmin)
 
-admin.site.register(models.ZContentNode)
+admin.site.register(models.ZPost)
 
 
 admin.site.register(models.ZSource)
-admin.site.register(models.ZSourceYoutube)
+admin.site.register(models.ZYoutubeChannel)
 admin.site.register(models.ZSourceBlog)
+
+
 admin.site.register(models.ZContent)
+
 admin.site.register(models.ZContentVideo)
+admin.site.register(models.ZYoutubeVideo)
+
 admin.site.register(models.ZContentText)
+
 admin.site.register(models.ZContentFile)
+
 admin.site.register(models.ZContentLink)
+
 admin.site.register(models.ZContentQuiz)
