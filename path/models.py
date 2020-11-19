@@ -1,6 +1,6 @@
+from django.utils.translation import ugettext_lazy as _
 from django.db import models
 # from django.contrib.auth import get_user_model
-from django.utils.translation import ugettext_lazy as _
 
 # from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 from mptt.models import MPTTModel, TreeForeignKey
@@ -46,7 +46,25 @@ from mptt.models import MPTTModel, TreeForeignKey
 
 
 class ZPathNode(MPTTModel):
+
+    PATH = 'PATH'
+    POST = 'POST'
+    CONTENT = 'CONTENT'
+    VIDEO = 'VIDEO'
+    FILE = 'FILE'
+
+    PATH_TYPE_ENUM = [
+        (PATH, _('path')),
+        (POST, _('post')),
+        (CONTENT, (
+                (VIDEO, _('video')),
+                (FILE, _('file')),
+            )
+        ),
+    ]
+
     # code = models.BigIntegerField('Code', primary_key=True, default=0, null=False, unique=True)
+    model_type = models.CharField('Type', max_length=32, choices=PATH_TYPE_ENUM, default=PATH)
     label = models.CharField('Label', max_length=256, default='', blank=True)
     description = models.TextField('Description', default='', blank=True)
 
@@ -64,13 +82,25 @@ class ZPathNode(MPTTModel):
 
 class ZPostNode(ZPathNode):
 
-    # parent = TreeForeignKey('ZPathNode', related_name='children', on_delete=models.CASCADE, null=True, blank=True)
+    def __init__(self, *args, **kwargs):
+        self._meta.get_field('model_type').default = ZPathNode.POST
+        super(ZPostNode, self).__init__(*args, **kwargs)
+
+    class Meta:
+        proxy = True
+        
     pass
 
 
 class ZContentNode(ZPathNode):
 
-    # parent = TreeForeignKey('ZPostNode', related_name='children', on_delete=models.CASCADE, null=True, blank=True)
+    def __init__(self, *args, **kwargs):
+        self._meta.get_field('model_type').default = ZPathNode.CONTENT
+        super(ZContentNode, self).__init__(*args, **kwargs)
+
+    class Meta:
+        proxy = True
+
     pass
 
 

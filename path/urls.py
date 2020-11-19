@@ -27,5 +27,4 @@ urlpatterns = [
     # path('channel/source_query', views.parse_source_query, name='source_query'),      deprecated
 
     path('channel/parse/subscription', views.add_youtube_channel_2_path, name='channel_subscription'),
-      
 ]

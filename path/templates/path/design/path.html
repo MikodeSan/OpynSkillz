@@ -59,7 +59,7 @@
                     <div id="path_card_{{ node.pk }}">
                         <div class="card card-header-actions mb-4">
                             <div class="card-header">
-                                {{ node.pk }} - {{ node.label }}
+                                {{ node.pk }} - {{ node.label }} - {{ node.model_type }}
                                 {% include "path/snippet/path_command.html" %}
                             </div>
                             <div class="card-body">
