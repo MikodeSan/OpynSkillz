@@ -7,12 +7,18 @@ app_name = 'path'
 urlpatterns = [
     path('', views.index, name='home'),
     path('channel/', views.channel, name='channel'),
+
+    path('channel/design/path/<int:path_id>', views.path_design, name='design'),
+
     path('channel/path/new', views.path_initialize, name='new'),
-    path('channel/path/new/root/<int:root_id>/parent/<int:parent_id>', views.path_initialize, name='new'),
-    path('channel/path/create/root/<int:root_id>/parent/<int:parent_id>', views.path_create, name='create'),
+    path('design/path/root/<int:root_id>/node/<int:node_id>/new', views.path_initialize, name='new'),
+    path('design/path/root/<int:root_id>/node/<int:node_id>/create', views.path_create, name='create'),
     path('channel/path/remove', views.path_remove, name='remove'),
     path('channel/path/move', views.path_move, name='move'),
-    path('channel/design/path/<int:path_id>', views.path_design, name='design'),
+
+    path('design/post/root/<int:root_id>/node/<int:node_id>/new', views.post_initialize, name='post_new'),
+    path('design/post/root/<int:root_id>/node/<int:node_id>/create', views.post_create, name='post_create'),
+
     # path('channel/sandbox', views.sandbox, name='sandbox'),
     path('channel/design/path/<int:path_id>/sandbox', views.sandbox, name='sandbox'),
     path('channel/design/path/<int:path_id>/sandbox/source/<str:source_id>/contents', views.sandbox_source_contents, name='sandbox_source_contents'),

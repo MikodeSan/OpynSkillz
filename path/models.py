@@ -81,6 +81,16 @@ class Post(models.Model):
     slug = models.SlugField()
     pass
 
+class TesyPost(MPTTModel):
+    title = models.CharField(max_length=120)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+    path = TreeForeignKey('ZPathNode', on_delete=models.CASCADE, null=True, blank=True)
+    content = models.TextField('Content')
+    slug = models.SlugField()
+    pass
+
+
+
 class ZSource(models.Model):
     identifier = models.CharField('ID', max_length=256, default='')
     etag = models.CharField('Etag', max_length=256, default='')

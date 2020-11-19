@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
-from .models import ZPathNode, ZSource, ZContent
+from .models import ZPathNode, ZPostNode, ZSource, ZContent
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -48,8 +48,28 @@ def channel(request):
     return render(request, 'path/channel.html', context)
 
 
-def path_initialize(request, root_id=0, parent_id=0):
+def path_design(request, path_id):
 
+    # context = {}
+    # context['Message'] = 'Hello Moto'
+
+    # if request.method == 'POST':
+    
+    #     label = request.POST.get('path_label')
+    #     description = request.POST.get('description')
+        
+    #     path_dbo = ZPathNode.objects.create(label=label, description=description)
+
+    root_dbo = ZPathNode.objects.get(pk=path_id)
+    # path_dbo_lst = ZPathNode.objects.all()
+    path_dbo_lst = root_dbo.get_descendants(include_self=False)
+
+    return render(request, 'path/design/path.html', locals())
+
+
+def path_initialize(request, root_id=0, node_id=0):
+
+    element_type = 'path'
     # if request.method == 'POST':
     
     #     root_path_id = int(request.POST.get('root_path_id'))
@@ -59,7 +79,7 @@ def path_initialize(request, root_id=0, parent_id=0):
     return render(request, 'path/path_initialize.html', locals())
 
 
-def path_create(request, root_id, parent_id):
+def path_create(request, root_id, node_id):
 
     ret = redirect('path:channel')
 
@@ -76,7 +96,7 @@ def path_create(request, root_id, parent_id):
             # root_path_dbo = ZPathNode.objects.get(pk=root_id)
 
             # Add new path as sub-path
-            parent_path_dbo = ZPathNode.objects.get(pk=parent_id)
+            parent_path_dbo = ZPathNode.objects.get(pk=node_id)
             path_dbo.move_to(parent_path_dbo, position='last-child')
 
             # parent_path_dbo.children.add(path_dbo)
@@ -116,6 +136,14 @@ def path_move(request):
         node_id = int(request.POST.get('node_id'))
 
         path_dbo = ZPathNode.objects.get(pk=node_id)
+        
+        dbo_lst = ZPostNode.objects.filter(pk=node_id)
+        if dbo_lst:
+            print('Is Post:', dbo_lst, isinstance(dbo_lst[0], ZPostNode))
+        else:
+            dbo_lst = ZPathNode.objects.filter(pk=node_id)
+            if dbo_lst:
+                print('Is Path:', dbo_lst, isinstance(dbo_lst[0], ZPathNode))
 
         if operation_id == 'parent':
             # Become previous sibling of the parent
@@ -129,9 +157,9 @@ def path_move(request):
             if next_path_dbo:
                 path_dbo.move_to(next_path_dbo, position='first-child')
 
-
         elif operation_id == 'previous':
             # Become before the previous sibling
+
             previous_path_dbo = path_dbo.get_previous_sibling()
             if previous_path_dbo:
                 path_dbo.move_to(previous_path_dbo, position='left')
@@ -174,23 +202,37 @@ def path_move(request):
     return HttpResponse( json.dumps( context ) )
 
 
-def path_design(request, path_id):
+def post_initialize(request, root_id=0, node_id=0):
 
-    # context = {}
-    # context['Message'] = 'Hello Moto'
+    context = {}
 
-    # if request.method == 'POST':
+    element_type = 'post'
+
+    return render(request, 'path/path_initialize.html', locals())
+
+def post_create(request, root_id, node_id):
+
+    ret = redirect('path:design', root_id)
+
+    if request.method == 'POST':
     
-    #     label = request.POST.get('path_label')
-    #     description = request.POST.get('description')
-        
-    #     path_dbo = ZPathNode.objects.create(label=label, description=description)
+        # Create new post
+        label = request.POST.get('path_label')
+        description = request.POST.get('description')
 
-    root_dbo = ZPathNode.objects.get(pk=path_id)
-    # path_dbo_lst = ZPathNode.objects.all()
-    path_dbo_lst = root_dbo.get_descendants(include_self=False)
+        post_dbo = ZPostNode.objects.create(label=label, description=description)
 
-    return render(request, 'path/design/path.html', locals())
+        if root_id > 0 and node_id > 0:
+
+            # Add new path as sub-path
+            path_node_dbo = ZPathNode.objects.get(pk=node_id)
+            post_dbo.move_to(path_node_dbo, position='last-child')
+
+            ret = redirect('path:design', root_id)
+        else:
+            ret = redirect('path:channel')
+
+    return ret
 
 
 def sandbox(request, path_id):

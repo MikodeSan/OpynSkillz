@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 
 # from polymorphic_tree.admin import PolymorphicMPTTParentModelAdmin, PolymorphicMPTTChildModelAdmin
-from mptt.admin import MPTTModelAdmin
+from mptt.admin import MPTTModelAdmin, DraggableMPTTAdmin
 
 from . import models
 
@@ -48,9 +48,14 @@ MPTT_ADMIN_LEVEL_INDENT = 20
 #         }
 
 
-admin.site.register(models.ZPathNode, MPTTModelAdmin)
+admin.site.register(models.ZPathNode, DraggableMPTTAdmin)
+
 admin.site.register(models.ZPostNode)
+admin.site.register(models.Post)
+admin.site.register(models.TesyPost, MPTTModelAdmin)
+
 admin.site.register(models.ZContentNode)
+
 
 admin.site.register(models.ZSource)
 admin.site.register(models.ZSourceYoutube)

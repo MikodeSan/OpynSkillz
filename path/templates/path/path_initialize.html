@@ -12,9 +12,16 @@
         <!-- Form Controls-->
         <div id="default">
           <div class="card mb-4">
-            <div class="card-header">Nouveau parcours</div>
-            <form action="{% url 'path:create' root_id parent_id %}" method="post">
+
+            {% if element_type == 'path' %}            
+            <div class="card-header">Nouveau Parcours</div>
+            <form action="{% url 'path:create' root_id node_id %}" method="post">
             {% comment %} <form class="form-inline justify-content-center" action="{% url 'path:home' %}" method="post"> {% endcomment %}
+            {% elif element_type == 'post' %}
+              <div class="card-header">Nouveau Post</div>
+              <form action="{% url 'path:post_create' root_id node_id %}" method="post">
+            {% endif %}
+
               {% csrf_token %}
               <div class="card-body">
                 <!-- Component Preview-->
@@ -57,8 +64,8 @@
                 </div>
               </div>
               <div class="card-footer">
-                <a class="btn btn-sm btn-secondary p-3 line-height-normal" href="{% url 'path:channel' %}">Annuler</a>
-                <button type="submit" class="btn btn-success">Valider</button>
+                <a class="btn btn-sm btn-secondary {# p-3 line-height-normal #}" href="{% url 'path:design' root_id %}">Annuler</a>
+                <button type="submit" class="btn btn-sm btn-success">Valider</button>
               </div>
             {% comment %} <div class="sbp-preview-text">The default Bootstrap form control states have been restyled to fit the SB Admin Pro theme. The style has changed, but the markup is identical.</div> {% endcomment %}
             </form>

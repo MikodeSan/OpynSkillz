@@ -9,7 +9,8 @@
     </div>
 {% endcomment %}
 <div>
-    <button class="btn btn-pink btn-icon"><i class="fas fa-file"></i></button>
+    {% comment %} <button class="btn btn-pink btn-icon" onclick="post_create({{node.pk}})"><i class="fas fa-file-invoice"></i></button> {% endcomment %}
+    <a class="btn btn-pink btn-icon" href="{% url 'path:post_new' path_id node.pk %}"><i class="fas fa-file-invoice"></i></a>
     {% comment %} <button class="btn btn-pink btn-icon"><i class="fas fa-folder-plus"></i></button> {% endcomment %}
     <a class="btn btn-pink btn-icon 
     {% if node.level >= 3 %}
